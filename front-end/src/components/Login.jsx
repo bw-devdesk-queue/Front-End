@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-//import { axiosWithAuth } from '../utils/utils';
 
 // State Management
 import { useDispatch } from 'react-redux';
 import { login } from '../actions/actions';
 
 const Login = () => {
+    // Utility Hooks
     const history = useHistory();
     const dispatch = useDispatch();
+
+    // Component State
+    const [loginData, setLoginData] = useState({username: '', password: ''});
+
+    // Login-Type Constants
     const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
     const oppositeRole = rolePath === 'admin' ? 'user' : 'admin';
     
-
-    const [loginData, setLoginData] = useState({username: '', password: ''});
-
+    // Handler Functions
     const toggleLoginType = () => history.push(`/login/${oppositeRole}`);
 
     const handleChange = event => {
@@ -26,7 +29,7 @@ const Login = () => {
     const handleSubmit = event => {
         event.preventDefault();
     
-        dispatch(login({...loginData, role: rolePath}));
+        dispatch(login({...loginData, role: rolePath}, history));
 
         setLoginData({
             username: '',
@@ -34,6 +37,7 @@ const Login = () => {
         });
     }
 
+    // View
     return (
         <>
         <h3>{rolePath[0].toUpperCase() + rolePath.slice(1)} Login</h3>
