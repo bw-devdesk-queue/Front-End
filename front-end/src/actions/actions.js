@@ -18,7 +18,7 @@ export const register = userData=>dispatch=>{
     axiosWithAuth().post(`/auth/${userData.role}/register`, userData)
     .then(res=>{
         console.log(res)
-        // dispatch(t)
+        // dispatch(type:"")
     })
     .catch(err=>{
         console.log("Error",err)
