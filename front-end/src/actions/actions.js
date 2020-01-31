@@ -5,7 +5,7 @@ import { axiosWithAuth } from '../utils/utils';
 export const login = (userData, locationHistory) => dispatch => {
     dispatch({type: 'LOADING'});
 
-    axiosWithAuth().post(`/auth/${userData.role}/login`, {username: userData.username, userData: userData.password})
+    axiosWithAuth().post(`/auth/${userData.role}/login`, userData)
                    .then( res => {
                        console.log(res);
                        dispatch({type: 'LOGIN', payload: res.data}); //hopeful payload shape: name, role, id, userTickets
