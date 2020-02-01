@@ -8,7 +8,7 @@ const userTicketsTest = [
     submitter: "David", 
     status: "unresolved", 
     helper: "",
-    description: "This is a great ticket"
+    description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita nobis saepe atque quo accusantium, repudiandae eius cumque minus, dignissimos eveniet impedit adipisci! Officia recusandae sit explicabo corrupti mollitia qui tempore?"
   },
   {
     id: "2", 
@@ -16,7 +16,7 @@ const userTicketsTest = [
     submitter: "Josh", 
     status: "unresolved", 
     helper: "",
-    description: "This is a great ticket"
+    description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita nobis saepe atque quo accusantium, repudiandae eius cumque minus, dignissimos eveniet impedit adipisci! Officia recusandae sit explicabo corrupti mollitia qui tempore?"
   },
   {
     id: "3", 
@@ -24,7 +24,7 @@ const userTicketsTest = [
     submitter: "Ramy", 
     status: "unresolved", 
     helper: "",
-    description: "This is a great ticket"
+    description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita nobis saepe atque quo accusantium, repudiandae eius cumque minus, dignissimos eveniet impedit adipisci! Officia recusandae sit explicabo corrupti mollitia qui tempore?"
   },
   {
     id: "4", 
@@ -32,7 +32,7 @@ const userTicketsTest = [
     submitter: "Jarvis", 
     status: "unresolved", 
     helper: "",
-    description: "This is a great ticket"
+    description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita nobis saepe atque quo accusantium, repudiandae eius cumque minus, dignissimos eveniet impedit adipisci! Officia recusandae sit explicabo corrupti mollitia qui tempore?"
   }
 ];
 
@@ -42,7 +42,7 @@ const Tickets = () => {
     <>
       {
         userTicketsTest.map(ticket => {
-        return <Ticket data={ticket} />})
+        return <Ticket data={ticket} key={ticket.id} />})
       }
     </>
   );
