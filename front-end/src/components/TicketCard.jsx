@@ -5,32 +5,37 @@ import './Styles/Ticket.scss';
 
 const TicketWrapper = styled.div`
   display: flex;
+  flex-direction: column;
+  background: #fff;
+  margin-bottom: 1%;
+  border-radius: 5px;
   border: 1.5px solid black;
-  border-bottom: 0;
-  width: 80%;
-  margin-left: 0.25%;
-  background: whitesmoke;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  width: 60%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transition: all 0.4s ease;
+    background-color: lightgray;
+    border: 1.5px solid #333;
+  }
+
 `
 
 const TicketRow = styled.div`
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  border-bottom: 1px solid darkgray;
 `
 
-const TicketTitle = styled.h2`
-  margin-left: 1%;
-`
-
-const TicketDesc = styled.div`
-  border: 1px solid #333;
-  background: #fff;
-  margin: 1%;
-  width: 95%;
+const TicketTitle = styled.h3`
+  margin-left: 2%;
 `
 
 const TicketDetails = styled.div`
   display: flex;
-  justify-content: center;
+  background-color: #f1eeee;
+  width: 100%;
 `
 
 const TicketDetail = styled.p`
@@ -44,7 +49,7 @@ const TicketDetail = styled.p`
 `
 
 // ticket shape should be = id, title, submitter, status, helper
-const Ticket = ({data}) => {
+const TicketCard = ({data}) => {
   const [ticketData, setTicketData] = useState({
     id: "", 
     title: "", 
@@ -69,7 +74,8 @@ const Ticket = ({data}) => {
     <TicketWrapper>
       <TicketRow>
         <TicketTitle>{data.title}</TicketTitle>
-        <TicketDesc className='ticket-body-text'>{data.description}</TicketDesc>
+      </TicketRow>
+      <TicketRow>
         <TicketDetails>
           <TicketDetail>Id: {data.id}</TicketDetail>
           <TicketDetail>Submitter: {data.submitter}</TicketDetail>
@@ -81,4 +87,4 @@ const Ticket = ({data}) => {
   );
 }
 
-export default Ticket;
+export default TicketCard;

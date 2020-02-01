@@ -1,5 +1,15 @@
 import React, { useEffect } from 'react';
-import Ticket from './Ticket';
+import TicketCard from './TicketCard';
+import styled from 'styled-components';
+
+const TicketsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: whitesmoke;
+  margin: 2% 0%;
+`
 
 const userTicketsTest = [
   {
@@ -39,12 +49,12 @@ const userTicketsTest = [
 const Tickets = () => {
   
   return (
-    <>
+    <TicketsWrapper>
       {
         userTicketsTest.map(ticket => {
-        return <Ticket data={ticket} key={ticket.id} />})
+        return <TicketCard data={ticket} key={ticket.id} />})
       }
-    </>
+    </TicketsWrapper>
   );
 }
 
