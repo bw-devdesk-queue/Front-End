@@ -8,10 +8,13 @@ p {
 }
 
 .details-hover {
+  transition: all 0.3s ease;
+
   &:last-child:hover {
-    border: 1px solid #551A8B;
-    background-color: #7F00FF;
-    transition: all 0.3s ease;
+    border: 1px solid #333;
+    background-color: gold;
+    transition: all 0.4s ease;
+    color: #000000;
   }
 }
 
