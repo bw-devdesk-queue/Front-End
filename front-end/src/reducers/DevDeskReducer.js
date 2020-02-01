@@ -14,11 +14,19 @@ const intialState = {
 
 export const devDeskReducer = (state = intialState, action) => {
     switch( action.type ){
+        case 'LOADING': 
+                return {...state, loading: true}
+
+        case 'REGISTER':
+            return{
+                ...state,
+                user:action.payload,
+                loading:false
+            }        
         case 'LOGIN':
                 return { ...state }
 
-        case 'LOADING': 
-                return {...state, loading: true}
+        
 
         default:
                 return { ...state, loading: false, user: action.payload }
