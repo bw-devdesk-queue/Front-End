@@ -6,20 +6,34 @@ p {
   font-size: 1rem;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .scrollable {
   height: 20rem;
   overflow-y: scroll;
 }
 
-.details-hover {
+.details-unresolved {
   transition: all 0.3s ease;
+  background-color: #FF12FF;
+  color: #F7EEFF;
 
   &:last-child:hover {
-    border: 1px solid #333;
-    background-color: gold;
-    transition: all 0.4s ease;
-    color: #000000;
-    background-color: #f1eeee;
+    color: white;
+    background-color: #0099FE;
+    transition: all 0.3s ease;
   }
 }
 
+.details-resolved {
+  background-color: #04D651;
+  color: white;
+}
+
+.details-user {
+  background-color: #333;
+  color: white;
+}

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components';
 import './Styles/Ticket.scss';
+import { axiosWithAuth } from './../utils/utils';
 
 const TicketWrapper = styled.div`
   display: flex;
   border: 1.5px solid black;
-  border-bottom: 0;
+  margin: 2%;
   width: 80%;
   margin-left: 0.25%;
   background: whitesmoke;
@@ -55,9 +56,11 @@ const Ticket = ({data}) => {
   });
   const [resolutionHistory, setResolutionHistory] = useState([]);
 
-  // useEffect(
-  //   axiosWithAuth('/', {})
-  // )
+  // useEffect(() => {
+  //   axiosWithAuth().get('/auth/user/tickets')
+  //     .then(res => console.log("Ticket API response:", res))
+  //     .catch(err => console.log("Ticket API error:", err))
+  // }, []);
 
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
