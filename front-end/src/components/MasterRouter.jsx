@@ -9,5 +9,6 @@ export default () => <>
     <Route path="/login/user" component={Login} />
     <Route path="/login/admin" component={Login} />
     <Route path="/register" component={Register}/>
-    <Route path="/tickets" component={Tickets}/>
+    <Route path="/user/tickets" component={Tickets}/>
+    <Route path="/admin/tickets" component={Tickets}/>
     </>;
