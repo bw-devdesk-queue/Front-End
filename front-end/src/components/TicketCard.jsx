@@ -3,6 +3,19 @@ import { Link, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components';
 import './Styles/Ticket.scss';
 
+/* Styled components
+ The component is composed of a wrapper, rows (flex containers), and
+ these contain each ticket row data field, besides description. The
+ ticket description is displayed in the larger ticket page/modal
+
+ TicketWrapper
+   - TicketRow
+     -- TicketTitle
+       --- title
+     -- TicketDetails
+       --- id, submitter, status, helper
+*/
+
 const TicketWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -33,7 +46,9 @@ const TicketTitle = styled.h3`
   margin-left: 2%;
   overflow: hidden;
 `
-
+// At the breakpoint, the ticket details display in a column
+// This helps simplify responsiveness for the component
+// This necesitated style changes to border, color and background
 const TicketDetails = styled.div`
   display: flex;
   background-color: #f1eeee;
@@ -92,8 +107,9 @@ const TicketResolution = styled.p`
   }
 `
 
-// ticket shape should be = id, title, submitter, status, helper
+// Ticket shape should be = id, title, submitter, status, helper, description
 const TicketCard = ({data}) => {
+  // Ticket state
   const [ticketData, setTicketData] = useState({
     id: "", 
     title: "", 
@@ -104,10 +120,9 @@ const TicketCard = ({data}) => {
   });
   const [resolutionHistory, setResolutionHistory] = useState([]);
 
-  // useEffect(
-  //   axiosWithAuth('/', {})
-  // )
-
+  // Ticket details vars
+  // The buttons render dynamically depending on the role of the logged in user
+  // Doing this allows us to reuse same logic
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
   const isHelped = data.helper.length > 0;
@@ -115,6 +130,7 @@ const TicketCard = ({data}) => {
   const noTicketHelperMsg = isAdmin ? 'Add This Ticket' : `Helper: ${data.helper}`;
   const ticketHelperDetail = isHelped ? `Helper: ${data.helper}` : noTicketHelperMsg;
 
+  // The component returns a wrapped Link component wrapping the ticket card
   return (
     <TicketWrapper>
     <Link to={`/${rolePath}/tickets/${data.id}`}>
