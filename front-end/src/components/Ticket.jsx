@@ -3,7 +3,10 @@ import { useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components';
 import './Styles/Ticket.scss';
 import { axiosWithAuth } from './../utils/utils';
+
+// Test data
 import userTicketsTest from './../testData';
+const loggedInUser = {full_name: "David L White"};
 
 /* Styled components
  The component is composed of a wrapper, rows (flex containers), and
@@ -16,28 +19,37 @@ import userTicketsTest from './../testData';
      -- TicketDescription
        --- description
      -- TicketDetails
-       --- id, submitter, status, helper
+       --- ticket_id, submitter, status, helper
 */
 
 const TicketWrapper = styled.div`
   display: flex;
-  flex-direction: column;
   background: #fff;
-  padding-top: 1%;
   margin-bottom: 1%;
   margin-left: 1%;
   border-radius: 5px;
   border: 1.5px solid black;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-  width: 49%;
+  width: 97.5%;
+`
+
+const TicketColumn = styled.div`
+  width: 98%;
+  display: flex;
+  flex-direction: column;
 `
 
 const TicketRow = styled.div`
   width: 100%;
   display: flex;
   border-bottom: 1px solid darkgray;
+
+  &:nth-child(2) {
+    background-color: lightgray;
+  }
 `
 
+// Left hand side
 const TicketTitle = styled.h3`
   margin-left: 2%;
   overflow: hidden;
@@ -67,7 +79,7 @@ const TicketDetail = styled.p`
   margin: 2%;
   border: 1px solid gold;
   overflow: hidden;
-  white-space: nowrap;
+  white-space: wrap;
   background: #333;
   color: #fff;
   padding: 0.5rem;
@@ -91,10 +103,10 @@ const TicketDetail = styled.p`
   }
 `
 
-const TicketResolution = styled.p`
+const TicketHelper = styled.p`
   margin: 2%;
   border: 1px solid #333;
-  white-space: nowrap;
+  white-space: wrap;
   overflow: hidden;
   padding: 0.5rem;
   border-radius: 5px;
@@ -110,13 +122,50 @@ const TicketResolution = styled.p`
   }
 `
 
-// Ticket shape should be = id, title, submitter, status, helper
+// Right hand components
+const TicketHistoryTitle = styled.h3`
+  margin-left: 2%;
+  overflow: hidden;
+  font-style: italic;
+`
+
+const TicketSolutions = styled.div`
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid black;
+`
+
+const TicketSolutionRow = styled.div`
+  background: white;
+  width: 99.9%;
+`
+
+const TicketSolution = styled.p`
+  padding: 1%;
+  font-size: 1em;
+  border-bottom: 1px solid darkgray;
+`
+
+/* Ticket shape
+
+"ticket": {
+    "ticket_id": 2,
+    "title": "Ticket tittle",
+    "description": "Ticket description",
+    "attempted_solution":"Ticket solution Attempted  by user",
+    "created_at": "2020-01-31T22:55:39.100Z",
+    "completed": false,
+    "user_id": 1
+}
+
+*/
 const Ticket = (props) => {
   const [ticketData, setTicketData] = useState(userTicketsTest[0])
-  const [resolutionHistory, setResolutionHistory] = useState([]);
 
   useEffect(() => {
     const id = props.match.params.id;
+    console.log(id)
 
     // Simulate an API call until the backend has been fully
     // hooked up to this component
@@ -128,33 +177,56 @@ const Ticket = (props) => {
     //   .catch(err => console.log("Ticket API error:", err))
 
   }, []);
-
+  
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
   // Doing this allows us to reuse same logic
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
-  const isHelped = ticketData.helper;
-  const derivedClass = isAdmin ? (isHelped ? 'details-resolved' : 'details-unresolved') : 'details-user';
-  const noTicketHelperMsg = isAdmin ? 'Add This Ticket' : `Helper: ${ticketData.helper}`;
+  const isHelped = ticketData.helper
+  const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
+  const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticketData.helper}`;
   const ticketHelperDetail = isHelped ? `Helper: ${ticketData.helper}` : noTicketHelperMsg;
+
+  // Click handler for the TicketHelper component
+  const handleClick = () => {
+    if (isAdmin && !isHelped) {
+      setTicketData({...ticketData, helper: [loggedInUser.full_name]})
+    }
+  }
 
   return (
     <TicketWrapper>
-      <TicketRow>
-        <TicketTitle>{ticketData.title}</TicketTitle>
-      </TicketRow>
-      <TicketRow>
-        <TicketDescription>{ticketData.description}</TicketDescription>
-      </TicketRow>
-      <TicketRow>
-        <TicketDetails>
-          <TicketDetail>Id: {ticketData.id}</TicketDetail>
-          <TicketDetail>Submitter: {ticketData.submitter}</TicketDetail>
-          <TicketDetail>Status: {ticketData.status}</TicketDetail>
-          <TicketResolution className={derivedClass}>{ticketHelperDetail}</TicketResolution>
-        </TicketDetails>
-      </TicketRow>
+      <TicketColumn>
+        <TicketRow>
+          <TicketTitle>{ticketData.title}</TicketTitle>
+        </TicketRow>
+        <TicketRow>
+          <TicketDescription>{ticketData.description}</TicketDescription>
+        </TicketRow>
+        <TicketRow>
+          <TicketDetails>
+            <TicketDetail>Id: {ticketData.ticket_id}</TicketDetail>
+            <TicketDetail>Submitter: {ticketData.submitter}</TicketDetail>
+            <TicketDetail>Status: {ticketData.status}</TicketDetail>
+            <TicketHelper className={derivedClass} onClick={handleClick}>{ticketHelperDetail}</TicketHelper>
+          </TicketDetails>
+        </TicketRow>
+      </TicketColumn>
+      <TicketColumn>
+        <TicketSolutions>
+          <TicketRow>
+              <TicketHistoryTitle>Attempted Solutions:</TicketHistoryTitle>
+          </TicketRow>
+          {
+            ticketData.attempted_solution.map((sol, index) => (
+              <TicketSolutionRow key={index}>
+                <TicketSolution>{sol}</TicketSolution>
+              </TicketSolutionRow>
+              ))
+          }
+        </TicketSolutions>
+      </TicketColumn>
     </TicketWrapper>
   );
 }

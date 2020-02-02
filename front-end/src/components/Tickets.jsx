@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import TicketCard from './TicketCard';
 import Ticket from './Ticket';
@@ -15,7 +15,6 @@ const TicketsWrapper = styled.div`
 `
 
 const Tickets = () => {
-  
   return (
     <>
       <TicketsWrapper>
