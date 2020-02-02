@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 // State Management
 import { useDispatch } from 'react-redux';
-import { login } from '../actions/actions';
+import { authIn } from '../actions/actions';
+
+// Custom utils
+import { getRole, toggleRoleType } from '../utils/utils';
 
 const Login = () => {
     // Utility Hooks
@@ -14,11 +17,11 @@ const Login = () => {
     const [loginData, setLoginData] = useState({email: '', password: '', role: ''});
 
     // Login-Type Constants
-    const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
-    const oppositeRole = rolePath === 'admin' ? 'user' : 'admin';
+    const rolePath = getRole(useParams()[0]);
+    const oppositeRole = rolePath === 'admin' ? 'user' : 'admin'
     
     // Handler Functions
-    const toggleLoginType = () => history.push(`/login/${oppositeRole}`);
+    const toggleLoginType = () => toggleRoleType(rolePath, history);
 
     const handleChange = event => {
         setLoginData(
@@ -29,7 +32,7 @@ const Login = () => {
     const handleSubmit = event => {
         event.preventDefault();
     
-        dispatch(login({...loginData, role: rolePath}, history));
+        dispatch(authIn({...loginData, role: rolePath}, history));
 
         setLoginData({
             email: '',

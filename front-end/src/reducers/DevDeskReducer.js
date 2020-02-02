@@ -24,11 +24,19 @@ export const devDeskReducer = (state = intialState, action) => {
                 loading:false
             }        
         case 'LOGIN':
-                return { ...state }
+                return { ...state, loading: false,  user: {
+                    id: action.payload.userId,
+                    name: action.payload.full_name,
+                    email: action.payload.email,
+                    role: action.payload.role,
+                    userTickets: action.payload.userTickets || []
+                }
+            }
 
-        
+        case 'RECOVER_USER_FROM_LOCAL':
+                return {...state, user: {...action.payload}}
 
         default:
-                return { ...state, loading: false, user: action.payload }
+                return { ...state, loading: false }
     }
 }
