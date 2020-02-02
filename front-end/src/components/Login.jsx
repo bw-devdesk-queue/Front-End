@@ -14,7 +14,7 @@ const Login = () => {
     const dispatch = useDispatch();
 
     // Component State
-    const [loginData, setLoginData] = useState({email: '', password: ''});
+    const [loginData, setLoginData] = useState({email: '', password: '', role: ''});
 
     // Login-Type Constants
     const rolePath = getRole(useParams()[0]);

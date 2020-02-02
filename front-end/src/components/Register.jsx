@@ -17,8 +17,9 @@ import { toggleRoleType, getRole } from "../utils/utils"
      const [userData,setUserData]=useState({
          full_name:"",
          email:"",
-         password:""
-     });
+         password:"",
+         role: ""
+     })
 
      const toggleRegistrationType = () => toggleRoleType(role, history);
 
