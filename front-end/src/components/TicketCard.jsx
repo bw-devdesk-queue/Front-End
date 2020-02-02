@@ -117,7 +117,7 @@ const TicketCard = ({data}) => {
 
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
-  // Doing this allows us to reuse same logic
+  // Doing this allows us to reuse ticket components
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
   const isHelped = data.helper.length > 0;
@@ -132,6 +132,8 @@ const TicketCard = ({data}) => {
     }
   }
 
+  // Simulate an API call until the backend has been fully
+  // hooked up to this component
   useEffect(() => {
     console.log(ticketData)
   }, [ticketData]);

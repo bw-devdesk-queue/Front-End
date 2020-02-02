@@ -180,7 +180,7 @@ const Ticket = (props) => {
   
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
-  // Doing this allows us to reuse same logic
+  // Doing this allows us to reuse ticket components
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
   const isHelped = ticketData.helper

@@ -10,7 +10,8 @@ import {useHistory} from "react-router-dom"
      const [userData,setUserData]=useState({
          full_name:"",
          email:"",
-         password:""
+         password:"",
+         role: ""
      })
 
      const dispatch= useDispatch()
