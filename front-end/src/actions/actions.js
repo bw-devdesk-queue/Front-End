@@ -1,28 +1,37 @@
-import { axiosWithAuth } from '../utils/utils';
+import { axiosWithAuth, storeUser } from '../utils/utils';
 
 
 // userData shape = {username, password, role}
-export const login = (userData, locationHistory) => dispatch => {
+
+export const authIn = (userData, locationHistory) => dispatch => {
+    const authType = locationHistory.location.pathname.match(/login/) ? 'login' : 'register';
     dispatch({type: 'LOADING'});
 
-    axiosWithAuth().post(`/auth/${userData.role}/login`, userData)
-                   .then( res => {
-                       console.log(res);
-                       dispatch({type: 'LOGIN', payload: res.data}); //hopeful payload shape: name, role, id, userTickets
-                       localStorage.setItem('token', res.data.token);
-                       locationHistory.push( res.data.role === 'admin' ? '/admin/home' : '/home' );
+    axiosWithAuth().post(`/auth/${userData.role}/${authType}`, userData)
+                   .then( async res => {
+                       console.log(res.data);
+                       //Work around for mis-shaped data on return
+                       res.data.token ? localStorage.setItem('token', res.data.token) : localStorage.setItem('token', res.data.user.token);
+                       const {id, email, role, userTickets} = await res.data.user;
+                       // this is a work-around for mis-shaped data on return
+                       const name = await res.data.user.full_name;
+                       storeUser({id, name, email, role, userTickets});
+                       dispatch({type: 'LOGIN', payload: {id, email, role, userTickets}}); //hopeful payload shape: name, role, id, userTickets
+                       //locationHistory.push(`/home/user/${res.data.user.userId}`);
+                       locationHistory.push( res.data.user.role === 'admin' ? '/home/admin' : '/home/user' );
                    })
                    .catch( err => console.log('AXIOS ERROR: ', err));
 }
 
-export const register = userData=>dispatch=>{
-    dispatch({type:'LOADING'});
-    axiosWithAuth().post(`/auth/${userData.role}/register`, userData)
-    .then(res=>{
-        console.log(res)
-        // dispatch(type:"")
-    })
-    .catch(err=>{
-        console.log("Error",err)
-    })
+
+export const getTickets = userID => dispatch => {
+    axiosWithAuth().get(`/auth/user/${userID}/tickets`)
+                   .then(res => console.log(res))
+                   .catch(err => console.log('Axios Error: ', err))
+
+}
+
+
+export const recoverUser = user => dispatch => {
+    dispatch({type: "RECOVER_USER_FROM_LOCAL", payload: user});
 }
