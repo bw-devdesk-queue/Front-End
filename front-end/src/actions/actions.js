@@ -12,9 +12,11 @@ export const authIn = (userData, locationHistory) => dispatch => {
                        console.log(res.data);
                        //Work around for mis-shaped data on return
                        res.data.token ? localStorage.setItem('token', res.data.token) : localStorage.setItem('token', res.data.user.token);
-                       const {id, email, role, userTickets} = await res.data.user;
+                       const {email, role, userTickets} = await res.data.user;
                        // this is a work-around for mis-shaped data on return
+                       const id = await res.data.user.id ? res.data.user.id : res.data.user.userId;
                        const name = await res.data.user.full_name;
+                      //  end workaround
                        storeUser({id, name, email, role, userTickets});
                        dispatch({type: 'LOGIN', payload: {id, email, role, userTickets}}); //hopeful payload shape: name, role, id, userTickets
                        //locationHistory.push(`/home/user/${res.data.user.userId}`);
@@ -25,8 +27,13 @@ export const authIn = (userData, locationHistory) => dispatch => {
 
 
 export const getTickets = userID => dispatch => {
-    axiosWithAuth().get(`/auth/user/${userID}/tickets`)
-                   .then(res => console.log(res))
+    axiosWithAuth().get(`/api/tickets/${userID}`)
+                   .then(res => {
+                     console.log('*****: ', res.data)
+                     const currentUser = JSON.parse( localStorage.getItem('user') );
+                     localStorage.setItem('user', JSON.stringify({...currentUser, userTickets: res.data.tickets}));
+                     dispatch({type: 'UPDATE_TICKETS', payload: res.data.tickets});
+                   })
                    .catch(err => console.log('Axios Error: ', err))
 
 }
