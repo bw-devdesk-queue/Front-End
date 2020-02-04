@@ -43,10 +43,6 @@ const TicketRow = styled.div`
   width: 100%;
   display: flex;
   border-bottom: 1px solid darkgray;
-
-  &:nth-child(2) {
-    background-color: lightgray;
-  }
 `
 
 // Left hand side
@@ -55,11 +51,22 @@ const TicketTitle = styled.h3`
   overflow: hidden;
 `
 
+const TicketDescWrapper = styled.div`
+  width: 100%;
+  height: 20rem;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid darkgray;
+  background-color: lightgray;
+`
+
 const TicketDescription = styled.div`
-  border: 1px solid #333;
+  border-right: 1px solid #333; 
+  border-left: 1px solid #333;
   background: #fff;
-  margin: 1%;
-  width: 95%;
+  margin: 0% 1%;
+  width: 95%; 
+  overflow-y: scroll;
 `
 
 // At the breakpoint, the ticket details display in a column
@@ -122,7 +129,7 @@ const TicketHelper = styled.p`
   }
 `
 
-// Right hand components
+// Right hand side
 const TicketHistoryTitle = styled.h3`
   margin-left: 2%;
   overflow: hidden;
@@ -134,6 +141,9 @@ const TicketSolutions = styled.div`
   margin: 0;
   padding: 0;
   border-left: 1px solid black;
+  overflow-y: scroll;
+  height: 20rem;
+  border-bottom: 
 `
 
 const TicketSolutionRow = styled.div`
@@ -201,9 +211,9 @@ const Ticket = (props) => {
         <TicketRow>
           <TicketTitle>{ticketData.title}</TicketTitle>
         </TicketRow>
-        <TicketRow>
+        <TicketDescWrapper>
           <TicketDescription>{ticketData.description}</TicketDescription>
-        </TicketRow>
+        </TicketDescWrapper>
         <TicketRow>
           <TicketDetails>
             <TicketDetail>Id: {ticketData.ticket_id}</TicketDetail>
@@ -214,10 +224,10 @@ const Ticket = (props) => {
         </TicketRow>
       </TicketColumn>
       <TicketColumn>
+        <TicketRow>
+            <TicketHistoryTitle>Attempted Solutions:</TicketHistoryTitle>
+        </TicketRow>
         <TicketSolutions>
-          <TicketRow>
-              <TicketHistoryTitle>Attempted Solutions:</TicketHistoryTitle>
-          </TicketRow>
           {
             ticketData.attempted_solution.map((sol, index) => (
               <TicketSolutionRow key={index}>
