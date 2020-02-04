@@ -11,11 +11,16 @@ import Home from './Home';
 import TestComp from './TestComp';
 
 export default () => <>
-    <Route path="/login/user" component={Login} />
-    <Route path="/login/admin" component={Login} />
-    <Route path="/register" component={Register}/>
+    <Route exact path="/login" render={() => <Redirect to="/login/user" />} />
+    <Route path="/login/*" component={Login} />
+    <Route path="/register/*" component={Register}/>
     <Route exact path="/user/tickets" component={Tickets}/>
     <Route exact path="/admin/tickets" component={Tickets}/>
+    <PrivateRoute path="/home" component={Home} />
+
+    {/* Tests */}
+    <Route path="/test" component={TestComp}/>
+
     <Route 
         exact
         path='/user/tickets/:id' 
@@ -26,11 +31,4 @@ export default () => <>
         path='/admin/tickets/:id' 
         render={props => <Ticket {...props} />} 
     />
-
-export default () => <>
-    <Route exact path="/login" render={() => <Redirect to="/login/user" />} />
-    <Route path="/login/*" component={Login} />
-    <Route path="/register/*" component={Register}/>
-    <Route path="/test" component={TestComp}/>
-    <PrivateRoute path="/home" component={Home} />
-    </>;
+    </>
