@@ -5,6 +5,8 @@ import { useHistory } from 'react-router-dom';
 
 import { getRole, checkForUserRecovery, storeUser } from '../utils/utils';
 
+import Tickets from './Tickets';
+
 const Home = props => {
     const [someState, setSomeState] = useState();
     const history = useHistory();
@@ -27,6 +29,7 @@ const Home = props => {
         <>
             <h1>{`${userState.user.name ? userState.user.name : userState.user.email}`}'s Help Channel</h1>
             <h3>Role: {`${userState.user.role}`}</h3>
+            {userState.user &&  <Tickets /> }
         </>
     );
 }
