@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import TicketCard from './TicketCard';
 import Ticket from './Ticket';
 import styled from 'styled-components';
-import userTicketsTest from './../testData';
 
 import testTickets from '../testData';
+import { axiosWithAuth } from '../utils/utils';
 
 const TicketsWrapper = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ const Tickets = ({data}) => {
     <>
       <TicketsWrapper>
         {
-          tickets.map(ticket => {
+          (tickets ? tickets : []).map(ticket => {
           return <TicketCard data={ticket} key={ticket.id} />})
         }
       </TicketsWrapper>

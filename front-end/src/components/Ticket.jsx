@@ -5,7 +5,7 @@ import './Styles/Ticket.scss';
 import { axiosWithAuth } from './../utils/utils';
 
 // Test data
-import userTicketsTest from './../testData';
+import testTickets from './../testData';
 const loggedInUser = {full_name: "David L White"};
 
 /* Styled components
@@ -157,6 +157,23 @@ const TicketSolution = styled.p`
   border-bottom: 1px solid darkgray;
 `
 
+const TicketSolutionForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f1eeee;
+  width: 100%;
+`
+
+const SubmitButton = styled.button`
+  background: #333;
+  color: #fff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 5px;
+  outline: 0;
+`
+
 /* Ticket shape
 
 "ticket": {
@@ -171,15 +188,15 @@ const TicketSolution = styled.p`
 
 */
 const Ticket = (props) => {
-  const [ticketData, setTicketData] = useState(userTicketsTest[0])
+  const [ticketData, setTicketData] = useState(testTickets[0]);
+  const [solution, setSolution] = useState('');
 
   useEffect(() => {
     const id = props.match.params.id;
-    console.log(id)
 
     // Simulate an API call until the backend has been fully
     // hooked up to this component
-    setTicketData(userTicketsTest[id-1])
+    setTicketData(testTickets[id-1])
   
     // // Get ticket data from the API
     // axiosWithAuth().get('/auth/user/tickets')
@@ -197,12 +214,32 @@ const Ticket = (props) => {
   const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
   const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticketData.helper}`;
   const ticketHelperDetail = isHelped ? `Helper: ${ticketData.helper}` : noTicketHelperMsg;
+  const solutions = ticketData.attempted_solution.split('|') || '';
 
   // Click handler for the TicketHelper component
   const handleClick = () => {
     if (isAdmin && !isHelped) {
       setTicketData({...ticketData, helper: [loggedInUser.full_name]})
     }
+  }
+
+  const handleSubmit = event => {
+    event.preventDefault();
+
+    // Form validation
+    const noValue = solution.length === 0;
+    const isValidated = !noValue;
+
+    // Parse and resubmit pipe-delimited string + substring
+    if (isValidated) {
+      const updatedSolutions = [...solutions, solution].join('|');
+      setTicketData({...ticketData, 'attempted_solution': updatedSolutions});
+      setSolution('');
+    }
+  }
+
+  const handleChange = event => {
+    setSolution(event.target.value);
   }
 
   return (
@@ -229,13 +266,22 @@ const Ticket = (props) => {
         </TicketRow>
         <TicketSolutions>
           {
-            ticketData.attempted_solution.map((sol, index) => (
+            solutions.map((sol, index) => (
               <TicketSolutionRow key={index}>
                 <TicketSolution>{sol}</TicketSolution>
               </TicketSolutionRow>
               ))
           }
         </TicketSolutions>
+        <TicketRow>
+          <TicketSolutionForm>
+            <p>Add a solution</p>
+            <form onSubmit={handleSubmit}>
+                <input type="text" onChange={handleChange} value={solution} name="solution" placeholder="Solution"></input>
+                <SubmitButton type="submit">Add</SubmitButton>
+            </form>
+          </TicketSolutionForm>
+        </TicketRow>
       </TicketColumn>
     </TicketWrapper>
   );
