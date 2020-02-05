@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import TicketCard from './TicketCard';
-import Ticket from './Ticket';
+import Ticket from './Ticketc';
 import styled from 'styled-components';
 import userTicketsTest from './../testData';
 

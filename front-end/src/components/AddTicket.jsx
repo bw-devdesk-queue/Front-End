@@ -3,6 +3,8 @@ import {connect} from "react-redux"
 import { addticket } from "../actions/actions"
 
  const TicketForm =(props)=>{ 
+
+     const history=props.history
      const id = props.match.params.id
 
      const [addTicket,setAddTicket]=useState({
@@ -17,7 +19,7 @@ import { addticket } from "../actions/actions"
 
      const handleSubmit=event=>{
          event.preventDefault()
-         props.addticket(addTicket,id)
+         props.addticket(addTicket,id,history)
          setAddTicket({
             title:"",
             description:"",
