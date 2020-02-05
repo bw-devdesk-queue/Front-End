@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getTickets, recoverUser } from '../actions/actions';
+import { userTickets, recoverUser } from '../actions/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -15,12 +15,11 @@ const Home = props => {
         }
     } );
 
-    userState.user.id ? storeUser(userState.user) : dispatch(recoverUser(checkForUserRecovery(history)));
-
     const role = getRole(history.location.pathname);
 
     useEffect(() => {
-        dispatch(getTickets(userState.user.id))
+        userState.user.id ? storeUser(userState.user) : dispatch(recoverUser(checkForUserRecovery(history)));
+        dispatch(userTickets(userState.user.id));
     }, [ userState, dispatch ])
 
 
