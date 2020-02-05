@@ -8,22 +8,9 @@ import { axiosWithAuth } from './../utils/utils';
 import testTickets from './../testData';
 const loggedInUser = {full_name: "David L White"};
 
-/* Styled components
- The component is composed of a wrapper, rows (flex containers), and
- these contain data fields ticket shape
-
- TicketWrapper
-   - TicketRow
-     -- TicketTitle
-       --- title
-     -- TicketDescription
-       --- description
-     -- TicketDetails
-       --- ticket_id, submitter, status, helper
-*/
-
 const TicketWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   background: #fff;
   margin-bottom: 1%;
   margin-left: 1%;
@@ -37,6 +24,7 @@ const TicketColumn = styled.div`
   width: 98%;
   display: flex;
   flex-direction: column;
+  border: 1px solid darkgray;
 `
 
 const TicketRow = styled.div`
@@ -75,6 +63,7 @@ const TicketDescription = styled.div`
 const TicketDetails = styled.div`
   display: flex;
   background-color: #f1eeee;
+  height: 100%;
   width: 100%;
 
   @media (max-width: 1200px) {
@@ -142,8 +131,7 @@ const TicketSolutions = styled.div`
   padding: 0;
   border-left: 1px solid black;
   overflow-y: scroll;
-  height: 20rem;
-  border-bottom: 
+  height: 20rem; 
 `
 
 const TicketSolutionRow = styled.div`
@@ -155,15 +143,28 @@ const TicketSolution = styled.p`
   padding: 1%;
   font-size: 1em;
   border-bottom: 1px solid darkgray;
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 `
 
 const TicketSolutionForm = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  // align-items: center;
+  // justify-content: center;
   background-color: #f1eeee;
+  height: 100%;
   width: 100%;
+`
+
+const TicketFormFlex = styled.div`
+  display: flex;
+  flex-direction: column;
+  // justify-content: space-between;
+  align-items: center;
 `
 
 const SubmitButton = styled.button`
@@ -198,7 +199,7 @@ const Ticket = (props) => {
     // hooked up to this component
     setTicketData(testTickets[id-1])
   
-    // // Get ticket data from the API
+    // // Get all ticket data from the API
     // axiosWithAuth().get('/auth/user/tickets')
     //   .then(res => console.log("Ticket API response:", res))
     //   .catch(err => console.log("Ticket API error:", err))
@@ -244,45 +245,65 @@ const Ticket = (props) => {
 
   return (
     <TicketWrapper>
-      <TicketColumn>
-        <TicketRow>
+      {/* Header Row */}
+      <TicketRow className="header">
+        {/* Left Side */}
+        <TicketColumn className="left-side">
           <TicketTitle>{ticketData.title}</TicketTitle>
-        </TicketRow>
-        <TicketDescWrapper>
-          <TicketDescription>{ticketData.description}</TicketDescription>
-        </TicketDescWrapper>
-        <TicketRow>
+        </TicketColumn>
+        {/* Right side */}
+        <TicketColumn className="right-side">
+          <TicketHistoryTitle>Attempted Solutions:</TicketHistoryTitle>
+        </TicketColumn>
+      </TicketRow>
+
+      {/* Main content row */}
+      <TicketRow className="main">
+        {/* Left side */}
+        <TicketColumn className="left-side">
+          <TicketDescWrapper>
+            <TicketDescription>{ticketData.description}</TicketDescription>
+          </TicketDescWrapper>
+        </TicketColumn>
+        {/* Right side */}
+        <TicketColumn className="right-side">
+          <TicketSolutions>
+            {
+              solutions.map((sol, index) => (
+                <TicketSolutionRow key={index}>
+                  <TicketSolution>{sol}</TicketSolution>
+                </TicketSolutionRow>
+                ))
+            }
+          </TicketSolutions>
+        </TicketColumn>
+      </TicketRow>
+
+      {/* Footer row */}
+      <TicketRow className="footer">
+        {/* Left side */}
+        <TicketColumn className="left-side">
           <TicketDetails>
             <TicketDetail>Id: {ticketData.ticket_id}</TicketDetail>
             <TicketDetail>Submitter: {ticketData.submitter}</TicketDetail>
             <TicketDetail>Status: {ticketData.status}</TicketDetail>
             <TicketHelper className={derivedClass} onClick={handleClick}>{ticketHelperDetail}</TicketHelper>
           </TicketDetails>
-        </TicketRow>
-      </TicketColumn>
-      <TicketColumn>
-        <TicketRow>
-            <TicketHistoryTitle>Attempted Solutions:</TicketHistoryTitle>
-        </TicketRow>
-        <TicketSolutions>
-          {
-            solutions.map((sol, index) => (
-              <TicketSolutionRow key={index}>
-                <TicketSolution>{sol}</TicketSolution>
-              </TicketSolutionRow>
-              ))
-          }
-        </TicketSolutions>
-        <TicketRow>
+        </TicketColumn>
+        {/* Right side */}
+        <TicketColumn className="right-side">
+          {/* Add solution form */}
           <TicketSolutionForm>
-            <p>Add a solution</p>
-            <form onSubmit={handleSubmit}>
-                <input type="text" onChange={handleChange} value={solution} name="solution" placeholder="Solution"></input>
-                <SubmitButton type="submit">Add</SubmitButton>
-            </form>
+            <TicketFormFlex>
+              <p>Add a solution</p>
+              <form onSubmit={handleSubmit}>
+                  <input type="text" onChange={handleChange} value={solution} name="solution" placeholder="Solution"></input>
+                  <SubmitButton type="submit">Add</SubmitButton>
+              </form>
+            </TicketFormFlex>
           </TicketSolutionForm>
-        </TicketRow>
-      </TicketColumn>
+        </TicketColumn>
+      </TicketRow> 
     </TicketWrapper>
   );
 }
