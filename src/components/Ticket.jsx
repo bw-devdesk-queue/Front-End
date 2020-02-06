@@ -25,7 +25,7 @@ const TicketWrapper = styled.div`
 `
 
 const TicketColumn = styled.div`
-  width: 98%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   border: 1px solid darkgray;
@@ -76,6 +76,9 @@ const TicketDetails = styled.div`
 `
 
 const TicketDetail = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 2%;
   border: 1px solid gold;
   overflow: hidden;
@@ -104,6 +107,9 @@ const TicketDetail = styled.p`
 `
 
 const TicketHelper = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 2%;
   border: 1px solid #333;
   white-space: wrap;
@@ -135,6 +141,7 @@ const TicketSolutions = styled.div`
   padding: 0;
   border-left: 1px solid black;
   overflow-y: scroll;
+  word-wrap: break-word;
   height: 20rem; 
 `
 
@@ -154,7 +161,8 @@ const TicketSolution = styled.p`
   margin-inline-end: 0px;
 `
 
-const TicketSolutionForm = styled.div`
+const FormWrapper = styled.div`
+  padding: 1% 0%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -164,11 +172,26 @@ const TicketSolutionForm = styled.div`
   width: 100%;
 `
 
-const TicketFormFlex = styled.div`
+const Form = styled.form`
   display: flex;
-  flex-direction: column;
-  // justify-content: space-between;
-  align-items: center;
+  justify-content: center;
+  align-items: baseline;
+  width: 80%;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+`
+
+const FormInput = styled.textarea`
+  max-width: 100%; 
+  max-height: 100%;
+  width: 50rem;
+
+  &:focus {
+    // box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 8px 2px #0099FE;
+    outline: 0;
 `
 
 const SubmitButton = styled.button`
@@ -313,15 +336,13 @@ const Ticket = (props) => {
         {/* Right side */}
         <TicketColumn className="right-side">
           {/* Add solution form */}
-          <TicketSolutionForm>
-            <TicketFormFlex>
-              <p>Add a solution</p>
-              <form onSubmit={handleSubmit}>
-                  <input type="text" onChange={handleChange} value={solution} name="solution" placeholder="Solution"></input>
-                  <SubmitButton type="submit">Add</SubmitButton>
-              </form>
-            </TicketFormFlex>
-          </TicketSolutionForm>
+          <FormWrapper>
+            <p>Add a solution</p>
+            <Form onSubmit={handleSubmit}>
+              <FormInput type="text" onChange={handleChange} value={solution} name="solution" placeholder="Solution"></FormInput>
+              <SubmitButton type="submit">Add</SubmitButton>
+            </Form>
+          </FormWrapper>
         </TicketColumn>
       </TicketRow> 
     </TicketWrapper>
