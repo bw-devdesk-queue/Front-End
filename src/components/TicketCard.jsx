@@ -1,23 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom'
+import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import './Styles/Ticket.scss';
 
+import { useDispatch } from 'react-redux';
+import { updateTicket } from '../actions/actions';
+
 // Test data
 const loggedInUser = {full_name: "David L White"};
-
-/* Styled components
- The component is composed of a wrapper, rows (flex containers), and
- these contain each ticket row data field, besides description. The
- ticket description is displayed in the larger ticket page/modal
-
- TicketWrapper
-   - TicketRow
-     -- TicketTitle
-       --- title
-     -- TicketDetails
-       --- id, submitter, status, helper
-*/
 
 const TicketWrapper = styled.div`
   display: flex;
@@ -113,43 +103,45 @@ const TicketHelper = styled.p`
 // Ticket shape should be = id, title, submitter, status, helper, description
 const TicketCard = ({data}) => {
   // Ticket state
-  const [ticketData, setTicketData] = useState(data);
+  const dispatch = useDispatch();
+  //use of useDispatch to update ticket
+  // dispatch(updateTicket(ticket.ticket_id, ticketData))
+  const ticket = data ? data : [];
+  const [ticketData, setTicketData] = useState(ticket);
 
+  useEffect( () => {
+    dispatch(updateTicket(ticket.ticket_id, ticketData));
+  }, [ticketData.helper])
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
   // Doing this allows us to reuse ticket components
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
-  const isHelped = data.helper.length > 0;
+  const isHelped = ticket.helper?.length > 0;
   const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
-  const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${data.helper}`;
-  const ticketHelperDetail = isHelped ? `Helper: ${data.helper}` : noTicketHelperMsg;
+  const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticket.helper}`;
+  const ticketHelperDetail = isHelped ? `Helper: ${ticket.helper}` : noTicketHelperMsg;
 
   // Click handler for the TicketHelper component
   const handleClick = () => {
     if (isAdmin && !isHelped) {
-      setTicketData({...ticketData, helper: loggedInUser.full_name})
+      setTicketData({...ticketData, helper: loggedInUser.full_name});
     }
   }
 
-  // Simulate an API call until the backend has been fully
-  // hooked up to this component
-  useEffect(() => {
-    console.log(ticketData)
-  }, [ticketData]);
-
+  console.log(ticketData)  
   return (
     <TicketWrapper>
-    <Link to={`/${rolePath}/tickets/${ticketData.ticket_id}`}>
+    <Link to={`/${rolePath}/tickets/${ticket.ticket_id}`}>
       <TicketRow>
-        <TicketTitle>{data.title}</TicketTitle>
+        <TicketTitle>{ticket.title}</TicketTitle>
       </TicketRow>
     </Link>
       <TicketRow>
         <TicketDetails>
-          <TicketDetail>Id: {data.id}</TicketDetail>
-          <TicketDetail>Submitter: {data.submitter}</TicketDetail>
-          <TicketDetail>Status: {data.status}</TicketDetail>
+          <TicketDetail>Id: {ticket.id}</TicketDetail>
+          <TicketDetail>Submitter: {ticket.submitter}</TicketDetail>
+          <TicketDetail>Status: {ticket.status}</TicketDetail>
           <TicketHelper className={derivedClass} onClick={handleClick}>{ticketHelperDetail}</TicketHelper>
         </TicketDetails>
       </TicketRow>

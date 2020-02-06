@@ -13,11 +13,18 @@ body {
 
 p {
   font-size: 1rem;
+  margin: 0;
+  padding: 0;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+textarea {
+  max-width: 100%; 
+  max-height: 100%;
 }
 
 .scrollable {

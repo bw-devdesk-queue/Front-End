@@ -1,6 +1,7 @@
 import React, { useEffect } from "react"
 import {connect} from "react-redux"
 import { userTickets, recoverUser } from "../actions/actions"
+import Ticket from "./AllTickets"
 
 import {storeUser, checkForUserRecovery} from '../utils/utils';
 import { useHistory } from 'react-router-dom';
@@ -22,14 +23,7 @@ const UserHome=(props)=>{
         <>
         <h1>hello {props.name}</h1>
         <button onClick={sendPath}>Add Tickets</button>
-        {props.tickets.map(Ticket=>(
-            <div key={Ticket.ticket_id}>
-                Title: <h5>{Ticket.title}</h5>
-                Description: <h5>{Ticket.description}</h5>
-                Date: <h5>  {Ticket.created_at}</h5><br/>
-            </div>
-        ))}
-        
+        <Ticket key={Ticket.ticket_id}  ticket={props.tickets} props={props}/>
         </>
     )
 }
