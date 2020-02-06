@@ -153,8 +153,8 @@ const TicketSolution = styled.p`
 const TicketSolutionForm = styled.div`
   display: flex;
   flex-direction: column;
-  // align-items: center;
-  // justify-content: center;
+  align-items: center;
+  justify-content: center;
   background-color: #f1eeee;
   height: 100%;
   width: 100%;
