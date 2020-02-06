@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components';
 import './Styles/Ticket.scss';
-import { axiosWithAuth } from './../utils/utils';
+import { axiosWithAuth } from '../utils/utils';
 
 // Test data
-import testTickets from './../testData';
+import userTicketsTest from '../testData';
+import testTickets from '../testData';
+
 const loggedInUser = {full_name: "David L White"};
 
 const TicketWrapper = styled.div`
