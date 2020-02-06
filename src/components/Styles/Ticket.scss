@@ -1,0 +1,51 @@
+// Color vriables
+$resolved-green: #04D651;
+$unresolved-orange: orange;
+$nothelped-purple: #FF12FF;
+$nothelped-pink: #F7EEFF;
+$helped-blue:  #0099FE;
+$details-darkgray: #333;
+
+// Styles
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+p {
+  font-size: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.scrollable {
+  height: 20rem;
+  overflow: scroll;
+}
+
+.details-nothelped {
+  transition: all 0.3s ease;
+  background-color: $nothelped-purple;
+  color: $nothelped-pink;
+
+  &:last-child:hover {
+    color: white;
+    background-color: $helped-blue;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+}
+
+.details-helped {
+  background-color: $helped-blue;
+  color: white;
+}
+
+.details-user {
+  background-color: $details-darkgray;
+  color: white;
+}
