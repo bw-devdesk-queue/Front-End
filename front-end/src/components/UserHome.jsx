@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import {connect} from "react-redux"
 import { userTickets, recoverUser } from "../actions/actions"
-import Ticket from "./Ticket"
+import Ticket from "./AllTickets"
 
 import {storeUser, checkForUserRecovery} from '../utils/utils';
 import { useHistory } from 'react-router-dom';
