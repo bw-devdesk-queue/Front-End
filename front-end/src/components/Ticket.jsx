@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components';
 import './Styles/Ticket.scss';
-import { axiosWithAuth } from './../utils/utils';
+import { axiosWithAuth } from '../utils/utils';
 
 // Test data
-import testTickets from './../testData';
+import userTicketsTest from '../testData';
+import testTickets from '../testData';
+
+import { useSelector, useDispatch } from 'react-redux';
+
 const loggedInUser = {full_name: "David L White"};
 
 const TicketWrapper = styled.div`
@@ -207,15 +211,31 @@ const SubmitButton = styled.button`
 
 */
 const Ticket = (props) => {
-  const [ticketData, setTicketData] = useState(testTickets[0]);
+  const state = useSelector( state => {
+    return {
+      tickets: state.user.userTickets,
+      user: state.user
+    }
+  })
+  const [ticketData, setTicketData] = useState({
+    "ticket_id": 0,
+    "title": "",
+    "description": "",
+    "attempted_solution":"",
+    "created_at": "",
+    "completed": false,
+    "user_id": 0
+});
   const [solution, setSolution] = useState('');
 
   useEffect(() => {
     const id = props.match.params.id;
 
+    console.log("I'm loading")
+    console.log(id, state);
     // Simulate an API call until the backend has been fully
     // hooked up to this component
-    setTicketData(testTickets[id-1])
+    setTicketData(state.tickets.find( ticket => String(ticket.ticket_id) === String(id) ) )
   
     // // Get all ticket data from the API
     // axiosWithAuth().get('/auth/user/tickets')
@@ -229,11 +249,11 @@ const Ticket = (props) => {
   // Doing this allows us to reuse ticket components
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
-  const isHelped = ticketData.helper
+  const isHelped = ticketData?.helper
   const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
-  const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticketData.helper}`;
-  const ticketHelperDetail = isHelped ? `Helper: ${ticketData.helper}` : noTicketHelperMsg;
-  const solutions = ticketData.attempted_solution?.split('|');
+  const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticketData?.helper}`;
+  const ticketHelperDetail = isHelped ? `Helper: ${ticketData?.helper}` : noTicketHelperMsg;
+  const solutions = ticketData?.attempted_solution.split('|') || '';
 
   // Click handler for the TicketHelper component
   const handleClick = () => {
@@ -267,7 +287,7 @@ const Ticket = (props) => {
       <TicketRow className="header">
         {/* Left Side */}
         <TicketColumn className="left-side">
-          <TicketTitle>{ticketData.title}</TicketTitle>
+          <TicketTitle>{ticketData?.title}</TicketTitle>
         </TicketColumn>
         {/* Right side */}
         <TicketColumn className="right-side">
@@ -280,14 +300,14 @@ const Ticket = (props) => {
         {/* Left side */}
         <TicketColumn className="left-side">
           <TicketDescWrapper>
-            <TicketDescription>{ticketData.description}</TicketDescription>
+            <TicketDescription>{ticketData?.description}</TicketDescription>
           </TicketDescWrapper>
         </TicketColumn>
         {/* Right side */}
         <TicketColumn className="right-side">
           <TicketSolutions>
             {
-              solutions.map((sol, index) => (
+              solutions?.map((sol, index) => (
                 <TicketSolutionRow key={index}>
                   <TicketSolution>{sol}</TicketSolution>
                 </TicketSolutionRow>
@@ -302,9 +322,9 @@ const Ticket = (props) => {
         {/* Left side */}
         <TicketColumn className="left-side">
           <TicketDetails>
-            <TicketDetail>Id: {ticketData.ticket_id}</TicketDetail>
-            <TicketDetail>Submitter: {ticketData.submitter}</TicketDetail>
-            <TicketDetail>Status: {ticketData.status}</TicketDetail>
+            <TicketDetail>Id: {ticketData?.ticket_id}</TicketDetail>
+            <TicketDetail>Submitter: {ticketData?.submitter}</TicketDetail>
+            <TicketDetail>Status: {ticketData?.status}</TicketDetail>
             <TicketHelper className={derivedClass} onClick={handleClick}>{ticketHelperDetail}</TicketHelper>
           </TicketDetails>
         </TicketColumn>
