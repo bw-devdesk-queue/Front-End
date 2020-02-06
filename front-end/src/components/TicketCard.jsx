@@ -120,6 +120,7 @@ const TicketCard = ({data}) => {
     }
   }
 
+  console.log(ticketData)  
   return (
     <TicketWrapper>
     <Link to={`/${rolePath}/tickets/${ticket.ticket_id}`}>
