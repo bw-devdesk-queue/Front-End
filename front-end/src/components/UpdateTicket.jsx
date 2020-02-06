@@ -1,25 +1,25 @@
 import React,{useState} from "react"
 import {connect} from "react-redux"
-import { updateticket } from "../actions/actions"
+import { updateTicket } from "../actions/actions"
 
  const UpdateForm =(props)=>{ 
      const id = props.match.params.id
      console.log(props)
 
-     const [updateTicket,setupdateTicket]=useState({
+     const [updatedTicket, setupdatedTicket]=useState({
          title:"",
          description:"",
          completed:false,
      })
 
      const handleChange=event=>{
-        setupdateTicket({...updateTicket,[event.target.name]:event.target.value})
+        setupdatedTicket({...updatedTicket,[event.target.name]:event.target.value})
      }
 
      const handleSubmit=event=>{
          event.preventDefault()
-         props.updateticket(updateTicket,id)
-         setupdateTicket({
+         props.updateTicket(updateTicket,id)
+         setupdatedTicket({
             title:"",
             description:"",
             completed:false
@@ -41,4 +41,4 @@ import { updateticket } from "../actions/actions"
     )
  }
 
- export default connect(state=>{return state},{updateticket}) (UpdateForm);
+ export default connect(state=>{return state},{updateTicket}) (UpdateForm);

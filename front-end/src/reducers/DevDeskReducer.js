@@ -54,15 +54,20 @@ export const devDeskReducer = (state = intialState, action) => {
                 }
             }
         
-            case "GET_ONE_TICKET":
-                return{
-                    ...state,
-                    loading:false,
-                    oneTicket:action.payload
-                }
+        case "GET_ONE_TICKET":
+            return{
+                ...state,
+                loading:false,
+                oneTicket:action.payload
+            }
+
 
         case 'UPDATE_TICKETS':
-                return {...state, loading: false, user: { ...state.user, tickets: action.payload.map(ticket => ticket.ticket_id)}};
+                return {...state, loading: false, user: { ...state.user, userTickets: action.payload.map(ticket => ticket.ticket_id)}};
+
+        
+        case 'UPDATE_TICKET':
+                return {...state,  user: { ...state.user, tickets: [ state.user.userTickets.filter( ticket => ticket.ticket_id !== action.payload.ticket_id), action.payload ]}}
 
         case 'ADD_TICKET':
             return{
