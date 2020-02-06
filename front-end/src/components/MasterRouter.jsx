@@ -5,7 +5,7 @@ import { PrivateRoute } from '../utils/PrivateRoute';
 import Login from './Login';
 import Register from './Register';
 import Tickets from './Tickets';
-import Ticket from './Ticketc';
+import Ticket from './Ticket';
 import UserHome from "./UserHome";
 import Home from './Home';
 import TestComp from './TestComp';
