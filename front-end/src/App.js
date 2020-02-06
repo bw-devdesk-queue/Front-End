@@ -1,13 +1,13 @@
-import React from 'react';
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
+import React from "react";
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import { Provider } from "react-redux";
 
-import MasterRouter from './components/MasterRouter';
+import MasterRouter from "./components/MasterRouter";
 
-import { devDeskReducer } from './reducers/DevDeskReducer';
+import { devDeskReducer } from "./reducers/DevDeskReducer";
 
-const store  = createStore(devDeskReducer, applyMiddleware(thunk));
+const store = createStore(devDeskReducer, applyMiddleware(thunk));
 
 function App() {
   return (

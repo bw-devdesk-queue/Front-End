@@ -25,4 +25,4 @@ const DataList = props => {
 };
 
 
-export default CharacterList;
+export default DataList;
