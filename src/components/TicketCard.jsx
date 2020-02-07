@@ -3,8 +3,9 @@ import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import './Styles/Ticket.scss';
 
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { updateTicket } from '../actions/actions';
+import { axiosWithAuth } from './../utils/utils';
 
 // Test data
 const loggedInUser = {full_name: "David L White"};
@@ -109,23 +110,41 @@ const TicketCard = ({data}) => {
   const ticket = data ? data : [];
   const [ticketData, setTicketData] = useState(ticket);
 
+  // User data
+  const [allUsers, setUsers] = useState([]);
+  const userState = useSelector( state => {
+    return {
+        user: state.user
+    }
+  });
+  // Get users and populate allUsers state
+  useEffect( () => {
+    if(isAdmin) axiosWithAuth().get('/auth/user')
+                    .then( res => {
+                        console.log('Users Will Be: ', res.data);
+                        setUsers(res.data.users)
+                      })
+                    .catch(err => console.log('Error Fetching Users: ', err));
+    }, [])
+
   useEffect( () => {
     dispatch(updateTicket(ticketData, ticket.ticket_id));
-  }, [ticketData.helper])
+  }, [ticketData.assigned_to])
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
   // Doing this allows us to reuse ticket components
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
-  const isHelped = ticket.helper?.length > 0;
+  const isHelped = ticket.assigned_to?.length > 0;
   const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
-  const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticket.helper}`;
-  const ticketHelperDetail = isHelped ? `Helper: ${ticket.helper}` : noTicketHelperMsg;
+  const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticket.assigned_to}`;
+  const ticketHelperDetail = isHelped ? `Helper: ${ticket.assigned_to}` : noTicketHelperMsg;
 
   // Click handler for the TicketHelper component
   const handleClick = () => {
     if (isAdmin && !isHelped) {
-      setTicketData({...ticketData, helper: loggedInUser.full_name});
+      // Grab the user id from the state object and match it to the id of the correct user in allUsers
+      setTicketData({...ticketData, assigned_to: allUsers.filter(user => String(user.id) === String(userState.user.id))?.full_name});
     }
   }
 

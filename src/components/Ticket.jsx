@@ -306,7 +306,8 @@ const Ticket = (props) => {
   const handleHelperClick = () => {
     if (isAdmin && !isHelped) {
       console.log("user:", userState)
-      setTicketData({...ticketData, assigned_to: allUsers[userState.user.id]?.full_name})
+      // Grab the user id from the state object and match it to the id of the correct user in allUsers
+      setTicketData({...ticketData, assigned_to: allUsers.filter(user => String(user.id) === String(userState.user.id))?.full_name})
     }
   }
 
