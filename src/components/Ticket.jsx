@@ -270,19 +270,17 @@ const Ticket = (props) => {
     setTicketData( {...ticketData, ...state.tickets.find( ticket => String(ticket.ticket_id) === String(id) )} )
   }, []);
   
-    // // Get all ticket data from the API
-    // axiosWithAuth().get('/auth/user/tickets')
-    //   .then(res => console.log("Ticket API response:", res))
-    //   .catch(err => console.log("Ticket API error:", err))
     // David GET example (in case needed for MVP)
     // Get the target ticket from the API
-    // I first must GET all tickets, then I match based on the 
+    // I first must GET all tickets, then I verify 
+    // equality of match ticket_id and page id and 
+    // id from props.match.params.id
   useEffect(() => {
     axiosWithAuth().get('/api/tickets')
       .then(res => res.data.tickets.filter(ticket => parseInt(ticket.ticket_id) === parseInt(ticketId)))
       .then(ticket => console.log("David's Axios-Fetched Ticket:", ticket))
       .catch(err => console.log("Ticket API error:", err))
-  }, []);
+  }, [ticketData]);
   
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
@@ -290,24 +288,26 @@ const Ticket = (props) => {
   const solutions = ticketData?.attempted_solution.split('|') || '';
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
-  const isHelped = ticketData?.helper;
+  const isHelped = !ticketData?.assigned_to == undefined;
+  console.log(ticketData.assigned_to)
   const isMyUserTicket = (!isAdmin && ticketData?.user_id === userState.user.id);
 
   // Variables for the text of the helper button
   const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
   const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticketData?.helper}`;
-  const ticketHelperDetail = isHelped ? `Helper: ${ticketData?.helper}` : noTicketHelperMsg;
+  const ticketHelperDetail = isHelped ? `Helper: ${ticketData?.assigned_to}` : noTicketHelperMsg;
 
 
   useEffect(() => {
-    console.log(ticketData)
+    console.log(`Updating ticket #${ticketData.ticket_id}`, ticketData)
     dispatch(updateTicket(ticketData, ticketData.ticket_id));
   }, [ticketData.assigned_to, ticketData.attempted_solution, dispatch])
 
   // Click handler for the TicketHelper component
   const handleHelperClick = () => {
     if (isAdmin && !isHelped) {
-      setTicketData({...ticketData, assigned_to: [loggedInUser.full_name]})
+      console.log("user:", userState)
+      setTicketData({...ticketData, assigned_to: allUsers[userState.user.id]?.full_name})
     }
   }
 
