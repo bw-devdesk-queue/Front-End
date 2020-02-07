@@ -13,7 +13,7 @@ export const PrivateRoute = ({component: Component, ...rest}) => {
     return (
         <Route 
             {...rest} render = {
-                props => ( user?.id || hasToken ) ? <Component {...props} /> : <Redirect to='/test' />
+                props => ( user?.id || hasToken ) ? <Component {...props} /> : <Redirect to='/login' />
             }
         />
     );
