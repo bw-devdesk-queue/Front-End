@@ -75,7 +75,8 @@ export const addticket=(ticket,id,history)=>dispatch=>{
 export const updateTicket=(ticket,id)=>dispatch=>{
     axiosWithAuth().put(`/api/tickets/${id}`, ticket)
     .then(res => {
-        console.log(res)
+        console.log("Ticket, id props in PUT request:", ticket, id)
+        console.log("Ticket PUT response data:", res)
         dispatch({type:"UPDATE_TICKET", payload:res.data.ticket});
     })
     .catch(err=>{
