@@ -252,7 +252,10 @@ const Ticket = (props) => {
 
   useEffect( () => {
    if(isAdmin) axiosWithAuth().get('/auth/user')
-                   .then( res => setUsers(res.data))
+                   .then( res => {
+                      console.log('Users Will Be: ', res.data);
+                      setUsers(res.data)
+                    })
                    .catch(err => console.log('Error Fetching Users: ', err));
   }, [])
 
@@ -380,7 +383,7 @@ const Ticket = (props) => {
         <TicketColumn className="left-side">
           <TicketDetails>
             <TicketDetail>Id: {ticketData?.ticket_id}</TicketDetail>
-            <TicketDetail>Submitter: {isAdmin ? allUsers && allUsers.find(user => user.id === ticketData?.user_id) : state.user.name}</TicketDetail>
+            <TicketDetail>Submitter: {isAdmin ? allUsers && allUsers?.find(user => user.id === ticketData?.user_id) : state.user.name}</TicketDetail>
             <TicketDetail>Status: {ticketData?.completed ? 'Resolved' : 'Active'}</TicketDetail>
             <TicketHelper className={derivedClass} onClick={handleHelperClick}>{ticketHelperDetail}</TicketHelper>
             {
