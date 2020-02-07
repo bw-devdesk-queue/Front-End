@@ -1,5 +1,5 @@
 import React,{useState} from "react"
-import {authIn,register} from "../actions/actions"
+import {authIn} from "../actions/actions"
 import {useDispatch} from "react-redux"
 import {useHistory} from "react-router-dom"
 import { toggleRoleType, getRole } from "../utils/utils"

@@ -37,7 +37,7 @@ export const devDeskReducer = (state = intialState, action) => {
         case 'USER_PAGE':
                 return { ...state, loading: false, 
                      user: {
-                    name: action.payload.full_name,
+                    name: action.payload?.full_name,
                     userTickets: action.payload.tickets|| []
                 }
             }

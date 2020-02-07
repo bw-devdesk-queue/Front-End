@@ -9,6 +9,8 @@ import Modal from "react-animated-modal";
 import userTicketsTest from '../testData';
 import testTickets from '../testData';
 
+import { updateTicket } from '../actions/actions';
+
 import { useSelector, useDispatch } from 'react-redux';
 
 const loggedInUser = {full_name: "David L White"};
@@ -218,18 +220,24 @@ const SubmitButton = styled.button`
 */
 const Ticket = (props) => {
   const ticketId = props.match.params.id;
+  const dispatch = useDispatch();
+
   const state = useSelector( state => {
     return {
       tickets: state.user.userTickets,
       user: state.user
     }
-  })
+  });
+
+  const [allUsers, setUsers] = useState([]);
+
   const [ticketData, setTicketData] = useState({
     "ticket_id": 0,
     "title": "",
     "description": "",
     "attempted_solution":"",
     "created_at": "",
+    "assigned_to": "Not Yet Assigned",
     "completed": false,
     "user_id": 0
   });
@@ -238,19 +246,31 @@ const Ticket = (props) => {
         user: state.user
     }
   });
-  
+
   const [solution, setSolution] = useState('');
+
+
+  useEffect( () => {
+   if(isAdmin) axiosWithAuth().get('/auth/user')
+                   .then( res => setUsers(res.data))
+                   .catch(err => console.log('Error Fetching Users: ', err));
+  }, [])
+
+
 
   useEffect(() => {
     const id = props.match.params.id;
 
     console.log("I'm loading")
     console.log(id, state);
-    // Simulate an API call until the backend has been fully
-    // hooked up to this component
-    setTicketData(state.tickets.find( ticket => String(ticket.ticket_id) === String(id) ) )
-  }, []);
 
+    setTicketData( {...ticketData, ...state.tickets.find( ticket => String(ticket.ticket_id) === String(id) )} )
+  }, []);
+  
+    // // Get all ticket data from the API
+    // axiosWithAuth().get('/auth/user/tickets')
+    //   .then(res => console.log("Ticket API response:", res))
+    //   .catch(err => console.log("Ticket API error:", err))
     // David GET example (in case needed for MVP)
     // Get the target ticket from the API
     // I first must GET all tickets, then I match based on the 
@@ -275,10 +295,16 @@ const Ticket = (props) => {
   const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticketData?.helper}`;
   const ticketHelperDetail = isHelped ? `Helper: ${ticketData?.helper}` : noTicketHelperMsg;
 
+
+  useEffect(() => {
+    console.log(ticketData)
+    dispatch(updateTicket(ticketData, ticketData.ticket_id));
+  }, [ticketData.assigned_to, ticketData.attempted_solution, dispatch])
+
   // Click handler for the TicketHelper component
   const handleHelperClick = () => {
     if (isAdmin && !isHelped) {
-      setTicketData({...ticketData, helper: [loggedInUser.full_name]})
+      setTicketData({...ticketData, assigned_to: [loggedInUser.full_name]})
     }
   }
 
@@ -342,7 +368,7 @@ const Ticket = (props) => {
                 <TicketSolutionRow key={index}>
                   <TicketSolution>{sol}</TicketSolution>
                 </TicketSolutionRow>
-                ))
+              ))
             }
           </TicketSolutions>
         </TicketColumn>
@@ -354,13 +380,14 @@ const Ticket = (props) => {
         <TicketColumn className="left-side">
           <TicketDetails>
             <TicketDetail>Id: {ticketData?.ticket_id}</TicketDetail>
-            <TicketDetail>Submitter: {ticketData?.submitter}</TicketDetail>
-            <TicketDetail>Status: {ticketData?.status}</TicketDetail>
+            <TicketDetail>Submitter: {isAdmin ? allUsers && allUsers.find(user => user.id === ticketData?.user_id) : state.user.name}</TicketDetail>
+            <TicketDetail>Status: {ticketData?.completed ? 'Resolved' : 'Active'}</TicketDetail>
             <TicketHelper className={derivedClass} onClick={handleHelperClick}>{ticketHelperDetail}</TicketHelper>
             {
               (isAdmin || isMyUserTicket) ? 
                 <TicketDetail onClick={handleResolvedClick}>{ticketResolvedDetail}</TicketDetail> : null
             }
+
           </TicketDetails>
         </TicketColumn>
         {/* Right side */}
@@ -377,6 +404,6 @@ const Ticket = (props) => {
       </TicketRow> 
     </TicketWrapper>
   );
-}
+} 
 
 export default Ticket;
