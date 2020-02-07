@@ -30,7 +30,7 @@ import { toggleRoleType, getRole } from "../utils/utils"
      const handleSubmit=event=>{
         event.preventDefault()
         console.log(userData)
-        dispatch(authIn({...userData, role:"user"}, history))
+        dispatch(authIn({...userData, role: role}, history))
         
          setUserData({
             full_name:"",
