@@ -25,24 +25,32 @@ const FormWrapper = styled.div`
     height: 91.8vh;
 `
 
-const FormBackground = styled.div`
-
-`
-
 const Form = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     border-radius: 18px;
-    width: 35%;
-    background-color: whitesmoke;
-    opacity: 0.85;
+    width: 30%;
+    background-color: white;
+    opacity: 0.9;
     z-index: 0;
     overflow: hidden;
 
-    @media (max-width: 700px) {
+    @media (max-width: 1200px) {
         width: 50%;
+    }
+
+    @media (max-width: 900px) {
+        width: 80%;
+    }
+
+    @media (max-width: 600px) {
+        width: 95%;
+    }
+
+    @media (max-width: 400px) {
+        width: 100%;
     }
 `
 
@@ -52,6 +60,8 @@ const FormTitle = styled.h1`
     align-items: center;
     font-weight: bold;
     font-size: 3.5rem;
+    color: #444;
+    opacity: 1;
 
     @media (max-width: 1200px) {
         // font-size: 2.5rem;
@@ -70,8 +80,8 @@ const FormInput = styled.input`
     box-shadow: 0 0 4px #333 inset;
     text-indent: 5px;
     width: 80%;
-    background: #444;
-    color: white;
+    background: lightgray;
+    color: black;
     font-size: 1.2rem;
  
     &:focus {
@@ -85,6 +95,7 @@ const ButtonGroup = styled.div`
     justify-content: center;
     align-items: center;
     height: 50%;
+    margin-bottom: 2%;
 `
 
 const Button = styled.button`
@@ -151,7 +162,7 @@ const Login = () => {
                 <FormInput type="text" onChange={handleChange} value={loginData.email} name="email" placeholder="Email"></FormInput>
                 <FormInput type="password" onChange={handleChange} value={loginData.password} name="password" placeholder="Password"></FormInput>
                 <ButtonGroup>
-                    <Button type="submit">Submit</Button>
+                    <Button onClick={handleSubmit} type="submit">Submit</Button>
                     {/* Style this button to look like a toggle? */}
                     <Button onClick={toggleLoginType}>{oppositeRole[0].toUpperCase() + oppositeRole.slice(1)} Login</Button>
                 </ButtonGroup>
