@@ -317,7 +317,7 @@ const Ticket = (props) => {
   const handleResolvedClick = () => {
     const isResolved = ticketData?.resolved === true;
     if (!isResolved) {
-      setTicketData({...ticketData, resolved: 'solved'});
+      setTicketData({...ticketData, completed: true});
     }
   }
 
