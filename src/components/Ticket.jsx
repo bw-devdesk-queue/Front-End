@@ -3,6 +3,7 @@ import { useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components';
 import './Styles/Ticket.scss';
 import { axiosWithAuth } from '../utils/utils';
+import Modal from "react-animated-modal";
 
 // Test data
 import userTicketsTest from '../testData';
@@ -216,6 +217,7 @@ const SubmitButton = styled.button`
 
 */
 const Ticket = (props) => {
+  const ticketId = props.match.params.id;
   const state = useSelector( state => {
     return {
       tickets: state.user.userTickets,
@@ -230,7 +232,13 @@ const Ticket = (props) => {
     "created_at": "",
     "completed": false,
     "user_id": 0
-});
+  });
+  const userState = useSelector( state => {
+    return {
+        user: state.user
+    }
+  });
+  
   const [solution, setSolution] = useState('');
 
   useEffect(() => {
@@ -241,29 +249,47 @@ const Ticket = (props) => {
     // Simulate an API call until the backend has been fully
     // hooked up to this component
     setTicketData(state.tickets.find( ticket => String(ticket.ticket_id) === String(id) ) )
-  
-    // // Get all ticket data from the API
-    // axiosWithAuth().get('/auth/user/tickets')
-    //   .then(res => console.log("Ticket API response:", res))
-    //   .catch(err => console.log("Ticket API error:", err))
+  }, []);
 
+    // David GET example (in case needed for MVP)
+    // Get the target ticket from the API
+    // I first must GET all tickets, then I match based on the 
+  useEffect(() => {
+    axiosWithAuth().get('/api/tickets')
+      .then(res => res.data.tickets.filter(ticket => parseInt(ticket.ticket_id) === parseInt(ticketId)))
+      .then(ticket => console.log("David's Axios-Fetched Ticket:", ticket))
+      .catch(err => console.log("Ticket API error:", err))
   }, []);
   
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
   // Doing this allows us to reuse ticket components
+  const solutions = ticketData?.attempted_solution.split('|') || '';
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
-  const isHelped = ticketData?.helper
+  const isHelped = ticketData?.helper;
+  const isMyUserTicket = (!isAdmin && ticketData?.user_id === userState.user.id);
+
+  // Variables for the text of the helper button
   const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
   const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticketData?.helper}`;
   const ticketHelperDetail = isHelped ? `Helper: ${ticketData?.helper}` : noTicketHelperMsg;
-  const solutions = ticketData?.attempted_solution.split('|') || '';
 
   // Click handler for the TicketHelper component
-  const handleClick = () => {
+  const handleHelperClick = () => {
     if (isAdmin && !isHelped) {
       setTicketData({...ticketData, helper: [loggedInUser.full_name]})
+    }
+  }
+
+  // Variables for the text of the resolve ticket button
+  const ticketResolvedDetail = isMyUserTicket ? 'Cancel Ticket' : 'Close Ticket';
+
+  // Click handler for the TicketHelper component
+  const handleResolvedClick = () => {
+    const isResolved = ticketData?.resolved === true;
+    if (!isResolved) {
+      setTicketData({...ticketData, resolved: 'solved'});
     }
   }
 
@@ -330,7 +356,11 @@ const Ticket = (props) => {
             <TicketDetail>Id: {ticketData?.ticket_id}</TicketDetail>
             <TicketDetail>Submitter: {ticketData?.submitter}</TicketDetail>
             <TicketDetail>Status: {ticketData?.status}</TicketDetail>
-            <TicketHelper className={derivedClass} onClick={handleClick}>{ticketHelperDetail}</TicketHelper>
+            <TicketHelper className={derivedClass} onClick={handleHelperClick}>{ticketHelperDetail}</TicketHelper>
+            {
+              (isAdmin || isMyUserTicket) ? 
+                <TicketDetail onClick={handleResolvedClick}>{ticketResolvedDetail}</TicketDetail> : null
+            }
           </TicketDetails>
         </TicketColumn>
         {/* Right side */}
