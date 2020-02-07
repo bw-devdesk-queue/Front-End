@@ -9,6 +9,7 @@
     "axios": "^0.19.2",
     "node-sass": "^4.13.1",
     "react": "^16.12.0",
+    "react-animated-modal": "^1.1.1",
     "react-dom": "^16.12.0",
     "react-hook-form": "^4.8.2",
     "react-redux": "^7.1.3",
