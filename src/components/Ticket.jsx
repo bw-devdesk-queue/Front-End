@@ -249,6 +249,29 @@ const Ticket = (props) => {
 
   const [solution, setSolution] = useState('');
 
+  const ticketTest = {
+    "title": "Made up titlte",
+    "description": "Made up desc",
+    "attempted_solution":"No solution yet",
+    "created_at": "",
+    "assigned_to": "David L White",
+    "completed": true,
+    "user_id": 1
+  };
+
+  const debugTicketsGet = () => {
+    console.log("Test PUT debug:")
+    return axiosWithAuth().put('/api/tickets/1', ticketTest)
+    .then(res => console.log("Response from API / PUT:", res))
+    .catch(err => console.log("Error:", err))
+  }
+
+  useEffect(() => {
+    // Debug PUT no response error/ issue?
+    console.log(debugTicketsGet())
+  }, [])
+
+
   // Get users and populate allUsers state
   useEffect( () => {
    if(isAdmin) axiosWithAuth().get('/auth/user')
@@ -300,14 +323,15 @@ const Ticket = (props) => {
   useEffect(() => {
     console.log(`Updating ticket #${ticketData.ticket_id}`, ticketData)
     dispatch(updateTicket(ticketData, ticketData.ticket_id));
-  }, [ticketData.assigned_to, ticketData.attempted_solution, dispatch])
+  }, [ticketData.assigned_to, ticketData.attempted_solution, ticketData.completed, dispatch])
 
   // Click handler for the TicketHelper component
   const handleHelperClick = () => {
     if (isAdmin && !isHelped) {
       console.log("user:", userState)
       // Grab the user id from the state object and match it to the id of the correct user in allUsers
-      setTicketData({...ticketData, assigned_to: allUsers.filter(user => String(user.id) === String(userState.user.id))?.full_name})
+      // setTicketData({...ticketData, assigned_to: allUsers.filter(user => String(user.id) === String(userState.user.id))?.full_name}) // backend is not working?
+      setTicketData({...ticketData, assigned_to: "David L White"})
     }
   }
 
@@ -316,7 +340,7 @@ const Ticket = (props) => {
 
   // Click handler for the TicketHelper component
   const handleResolvedClick = () => {
-    const isResolved = ticketData?.resolved === true;
+    const isResolved = ticketData?.completed === "true";
     if (!isResolved) {
       setTicketData({...ticketData, completed: true});
     }
