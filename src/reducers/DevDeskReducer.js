@@ -67,7 +67,7 @@ export const devDeskReducer = (state = intialState, action) => {
 
         
         case 'UPDATE_TICKET':
-                return {...state,  user: { ...state.user, tickets: [ state.user.userTickets.filter( ticket => ticket.ticket_id !== action.payload.ticket_id), action.payload ]}}
+                return {...state,  user: { ...state.user, tickets: [ state.user.userTickets.filter( ticket => ticket?.ticket_id !== action.payload?.ticket_id), action.payload ]}}
 
         case 'ADD_TICKET':
             return{
