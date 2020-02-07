@@ -315,10 +315,16 @@ const Ticket = (props) => {
   const isMyUserTicket = (!isAdmin && ticketData?.user_id === userState.user.id);
 
   // Variables for the text of the helper button
-  const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
   const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticketData?.helper}`;
-  const ticketHelperDetail = isHelped ? `Helper: ${ticketData?.assigned_to}` : noTicketHelperMsg;
+  const ticketHelperMsg = `Helper: ${ticketData?.assigned_to}`;
+  const ticketHelperDetail = isHelped ? ticketHelperMsg : noTicketHelperMsg;
+  const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
 
+  const detailsHelpedBtn = document.querySelector('.details-helped');
+  if (detailsHelpedBtn) {
+    detailsHelpedBtn.addEventListener('mouseover', () => detailsHelpedBtn.textContent = 'Unassign');
+    detailsHelpedBtn.addEventListener('mouseout', () => detailsHelpedBtn.textContent = ticketHelperMsg);
+  }
 
   useEffect(() => {
     console.log(`Updating ticket #${ticketData.ticket_id}`, ticketData)
@@ -327,11 +333,14 @@ const Ticket = (props) => {
 
   // Click handler for the TicketHelper component
   const handleHelperClick = () => {
-    if (isAdmin && !isHelped) {
-      console.log("user:", userState)
-      // Grab the user id from the state object and match it to the id of the correct user in allUsers
-      // setTicketData({...ticketData, assigned_to: allUsers.filter(user => String(user.id) === String(userState.user.id))?.full_name}) // backend is not working?
-      setTicketData({...ticketData, assigned_to: "David L White"})
+    if (isAdmin) {
+      if (!isHelped) {
+        // Grab the user id from the state object and match it to the id of the correct user in allUsers
+        // setTicketData({...ticketData, assigned_to: "David L White"}) // backend test
+        setTicketData({...ticketData, assigned_to: allUsers.filter(user => String(user.id) === String(userState.user.id))?.full_name}) // backend PUT requests are not working
+      } else {
+        setTicketData({...ticketData, assigned_to: ''}) // Unassign self
+      }
     }
   }
 
