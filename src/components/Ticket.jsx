@@ -8,6 +8,8 @@ import { axiosWithAuth } from '../utils/utils';
 import userTicketsTest from '../testData';
 import testTickets from '../testData';
 
+import { updateTicket } from '../actions/actions';
+
 import { useSelector, useDispatch } from 'react-redux';
 
 const loggedInUser = {full_name: "David L White"};
@@ -216,31 +218,47 @@ const SubmitButton = styled.button`
 
 */
 const Ticket = (props) => {
+
+  const dispatch = useDispatch();
+
   const state = useSelector( state => {
     return {
       tickets: state.user.userTickets,
       user: state.user
     }
-  })
+  });
+
+  const [allUsers, setUsers] = useState([]);
+
   const [ticketData, setTicketData] = useState({
     "ticket_id": 0,
     "title": "",
     "description": "",
     "attempted_solution":"",
     "created_at": "",
+    "assigned_to": "Not Yet Assigned",
     "completed": false,
     "user_id": 0
 });
+
   const [solution, setSolution] = useState('');
+
+
+  useEffect( () => {
+   if(isAdmin) axiosWithAuth().get('/auth/user')
+                   .then( res => setUsers(res.data))
+                   .catch(err => console.log('Error Fetching Users: ', err));
+  }, [])
+
+
 
   useEffect(() => {
     const id = props.match.params.id;
 
     console.log("I'm loading")
     console.log(id, state);
-    // Simulate an API call until the backend has been fully
-    // hooked up to this component
-    setTicketData(state.tickets.find( ticket => String(ticket.ticket_id) === String(id) ) )
+
+    setTicketData( {...ticketData, ...state.tickets.find( ticket => String(ticket.ticket_id) === String(id) )} )
   
     // // Get all ticket data from the API
     // axiosWithAuth().get('/auth/user/tickets')
@@ -260,10 +278,16 @@ const Ticket = (props) => {
   const ticketHelperDetail = isHelped ? `Helper: ${ticketData?.helper}` : noTicketHelperMsg;
   const solutions = ticketData?.attempted_solution.split('|') || '';
 
+
+  useEffect(() => {
+    console.log(ticketData)
+    dispatch(updateTicket(ticketData, ticketData.ticket_id));
+  }, [ticketData.helper, ticketData.attempted_solution])
+
   // Click handler for the TicketHelper component
   const handleClick = () => {
     if (isAdmin && !isHelped) {
-      setTicketData({...ticketData, helper: [loggedInUser.full_name]})
+      setTicketData({...ticketData, assigned_to: [loggedInUser.full_name]})
     }
   }
 
@@ -328,8 +352,8 @@ const Ticket = (props) => {
         <TicketColumn className="left-side">
           <TicketDetails>
             <TicketDetail>Id: {ticketData?.ticket_id}</TicketDetail>
-            <TicketDetail>Submitter: {ticketData?.submitter}</TicketDetail>
-            <TicketDetail>Status: {ticketData?.status}</TicketDetail>
+            <TicketDetail>Submitter: {isAdmin ? allUsers && allUsers.find(user => user.id === ticketData?.user_id) : state.user.name}</TicketDetail>
+            <TicketDetail>Status: {ticketData?.completed ? 'Resolved' : 'Active'}</TicketDetail>
             <TicketHelper className={derivedClass} onClick={handleClick}>{ticketHelperDetail}</TicketHelper>
           </TicketDetails>
         </TicketColumn>

@@ -110,7 +110,7 @@ const TicketCard = ({data}) => {
   const [ticketData, setTicketData] = useState(ticket);
 
   useEffect( () => {
-    dispatch(updateTicket(ticket.ticket_id, ticketData));
+    dispatch(updateTicket(ticketData, ticket.ticket_id));
   }, [ticketData.helper])
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user

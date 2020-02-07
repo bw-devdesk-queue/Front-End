@@ -12,7 +12,7 @@ export const authIn = (userData, locationHistory) => dispatch => {
                     //    console.log('AUTH ATTEMPT DATA: ', res);
                         //    WORK AROUND FOR MISRETURNED DATA FROM BACKEND
                         res.data?.token ? localStorage.setItem('token', res.data?.token) : localStorage.setItem('token', res.data?.user?.token);
-                        const {email, role, userTickets} = await res.data.user;
+                        const {email, role, userTickets} = await res.data?.user;
                         // this is a work-around for mis-shaped data on return
                         const id = await res.data.user.id ? res.data.user.id : res.data.user.userId;
                         const name = await res.data.user.full_name;

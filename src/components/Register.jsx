@@ -1,5 +1,5 @@
 import React,{useState} from "react"
-import {authIn,register} from "../actions/actions"
+import {authIn} from "../actions/actions"
 import {useDispatch} from "react-redux"
 import {useHistory} from "react-router-dom"
 import { toggleRoleType, getRole } from "../utils/utils"
@@ -30,7 +30,7 @@ import { toggleRoleType, getRole } from "../utils/utils"
      const handleSubmit=event=>{
         event.preventDefault()
         console.log(userData)
-        dispatch(authIn({...userData, role:"user"}, history))
+        dispatch(authIn({...userData, role: role}, history))
         
          setUserData({
             full_name:"",
