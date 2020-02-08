@@ -25,7 +25,7 @@ export default (props) => <>
         {/* <AdminTabs/> */}
         {/* <Route path='/' component={Dashboard} /> */}
         {/* // <PrivateRoute exact path='/' component={Tickets} /> */}
-        
+        <Route exact path="/" render={ () => <Redirect to="/login" /> } />
         <Route exact path="/login" render={() => <Redirect to="/login/user" />} />
         <Route path="/login/*" component={Login} />
         <Route path="/register/*" component={Register}/>
