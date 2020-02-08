@@ -1,6 +1,7 @@
 import React from "react";
-import {connect} from "react-redux"
+import {connect} from "react-redux";
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 const HeaderC = styled.nav`
 background-color: #f5f5dc;
@@ -32,10 +33,10 @@ const Header = (props) =>{
     <HeaderC className="nav-bar">
       
         <Title>Welcome to DevDesk</Title>
-        <a href="/user/tickets">Home</a>
-        <a href="/login/user">Login</a>
-        <a href="/Register/user">Register</a>
-        <a href="/" onClick={logout}>Sign-out</a>
+        <NavLink to="/user/tickets">Home</NavLink>
+        <NavLink to="/login/user">Login</NavLink>
+        <NavLink to="/Register/user">Register</NavLink>
+        <NavLink to="/" onClick={logout}>Sign-out</NavLink>
       
       
     
