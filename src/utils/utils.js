@@ -31,3 +31,5 @@ export const checkForUserRecovery = ( history ) => {
         history.push('/login/user');
     }
 }
+
+export const flushStorage = () => ['token', 'user'].forEach( key => localStorage.removeItem(`${key}`));

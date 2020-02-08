@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 // Styled components
 import styled from 'styled-components';
 // State Management
 import { useDispatch } from 'react-redux';
-import { authIn } from '../actions/actions';
+import { authIn, logout } from '../actions/actions';
 // Custom utils
 import { getRole, toggleRoleType } from '../utils/utils';
 const FormWrapper = styled.div`
@@ -113,6 +113,11 @@ const Login = () => {
     // Login-Type Constants
     const rolePath = getRole(useParams()[0]);
     const oppositeRole = rolePath === 'admin' ? 'user' : 'admin'
+    // Logout on mount
+    
+    useEffect( () => {
+        dispatch(logout)
+    }, []);
     // Handler Functions
     const toggleLoginType = () => toggleRoleType(rolePath, history);
     const handleChange = event => {
@@ -128,6 +133,7 @@ const Login = () => {
             password: ''
         });
     }
+    const checkForSubmit = event => event.key === 'Enter' ? handleSubmit(event) : null;
     // View
     return (
         <>
@@ -135,7 +141,7 @@ const Login = () => {
             <Form onSubmit={handleSubmit}>
                 <FormTitle>{rolePath[0].toUpperCase() + rolePath.slice(1)} Login</FormTitle>
                 <FormInput type="text" onChange={handleChange} value={loginData.email} name="email" placeholder="Email"></FormInput>
-                <FormInput type="password" onChange={handleChange} value={loginData.password} name="password" placeholder="Password"></FormInput>
+                <FormInput type="password" onKeyPress={checkForSubmit} onChange={handleChange} value={loginData.password} name="password" placeholder="Password"></FormInput>
                 <ButtonGroup>
                     <Button onClick={handleSubmit} type="submit">Login</Button>
                     {/* Style this button to look like a toggle? */}

@@ -3,6 +3,8 @@ import {connect} from "react-redux";
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
+import { logout } from '../actions/actions';
+
 const HeaderC = styled.nav`
 background-color: #f5f5dc;
 height: 70px;
@@ -25,9 +27,6 @@ const Title=styled.h1`
 
 const Header = (props) =>{
 
-  const logout= ()=>{
-    return localStorage.removeItem("token")
-  }
   
   return (
     <HeaderC className="nav-bar">
@@ -48,4 +47,4 @@ const mapStateToProps=state=>{
   return state
 }
 
-export default connect(mapStateToProps,{}) (Header);
+export default connect(mapStateToProps, {logout}) (Header);

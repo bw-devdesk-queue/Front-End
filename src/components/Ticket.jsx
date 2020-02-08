@@ -243,15 +243,15 @@ const Ticket = (props) => {
     }
   });
   const [solution, setSolution] = useState('');
-  const ticketTest = {
-    "title": "Made up titlte",
-    "description": "Made up desc",
-    "attempted_solution":"No solution yet",
-    "created_at": "",
-    "assigned_to": "David L White",
-    "completed": true,
-    "user_id": 1
-  };
+  // const ticketTest = {
+  //   "title": "Made up titlte",
+  //   "description": "Made up desc",
+  //   "attempted_solution":"No solution yet",
+  //   "created_at": "",
+  //   "assigned_to": "David L White",
+  //   "completed": true,
+  //   "user_id": 1
+  // };
   // Get users and populate allUsers state
   useEffect( () => {
    if(isAdmin) axiosWithAuth().get('/auth/user')
@@ -264,8 +264,6 @@ const Ticket = (props) => {
   // Get tickets and populate ticketData state
   useEffect(() => {
     const id = props.match.params.id;
-    console.log("I'm loading")
-    console.log(id, state);
     setTicketData( {...ticketData, ...state.tickets.find( ticket => String(ticket.ticket_id) === String(id) )} )
   }, []);
     // David GET example (in case needed for MVP)

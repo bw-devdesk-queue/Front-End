@@ -32,7 +32,6 @@ const Tickets = ({data}) => {
   useEffect( () => {
     state.user.id ? storeUser(state.user) : dispatch(recoverUser(checkForUserRecovery(history)));
     dispatch(userTickets(state.user.id));
-    dispatch(getalltickets(state.user.id))
   }, [])
 
 
