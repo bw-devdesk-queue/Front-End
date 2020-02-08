@@ -12,14 +12,24 @@ import TestComp from './TestComp';
 import TicketForm from "./AddTicket"
 import UpdateForm from "./UpdateTicket"
 import GetSpecificTicket from "./GetSpecificTicket"
+import Dashboard from "./Dashboard"
+import StudentTabs from "./StudentTabs"
+import AdminTabs from "./AdminTabs"
 
-export default () => <>
+
+export default (props) => <>
+
     <Switch>
-        <PrivateRoute exact path='/' component={Tickets} />
+        {/* <Dashboard/> */}
+        {/* <StudentTabs/> */}
+        {/* <AdminTabs/> */}
+        {/* <Route path='/' component={Dashboard} /> */}
+        {/* // <PrivateRoute exact path='/' component={Tickets} /> */}
+        
         <Route exact path="/login" render={() => <Redirect to="/login/user" />} />
         <Route path="/login/*" component={Login} />
         <Route path="/register/*" component={Register}/>
-        <Route exact path="/user/tickets" component={Tickets}/>
+        <PrivateRoute exact path="/user/tickets" component={Tickets}/>
         <Route exact path="/admin/tickets" component={Tickets}/>
         <Route exact path="/home" component={Home} />
         <PrivateRoute exact path="/home/user/:id" component={UserHome}/>

@@ -8,8 +8,6 @@ export const PrivateRoute = ({component: Component, ...rest}) => {
 
     const hasToken = localStorage.getItem('token');
 
-    console.log('User: ', user);
-
     return (
         <Route 
             {...rest} render = {
