@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-
 // Styled components
 import styled from 'styled-components';
-
 // State Management
 import { useDispatch } from 'react-redux';
-import { authIn } from '../actions/actions';
-
+import { authIn, logout } from '../actions/actions';
 // Custom utils
 import { getRole, toggleRoleType } from '../utils/utils';
-
 const FormWrapper = styled.div`
     display: flex;
     justify-content: center;
@@ -24,7 +20,6 @@ const FormWrapper = styled.div`
     background-size: cover;
     height: 91.8vh;
 `
-
 const Form = styled.div`
     display: flex;
     justify-content: center;
@@ -36,24 +31,19 @@ const Form = styled.div`
     opacity: 0.9;
     z-index: 0;
     overflow: hidden;
-
     @media (max-width: 1200px) {
         width: 50%;
     }
-
     @media (max-width: 900px) {
         width: 80%;
     }
-
     @media (max-width: 600px) {
         width: 95%;
     }
-
     @media (max-width: 400px) {
         width: 100%;
     }
 `
-
 const FormTitle = styled.h1`
     display: flex;
     justify-content: center;
@@ -62,12 +52,10 @@ const FormTitle = styled.h1`
     font-size: 3.5rem;
     color: #444;
     opacity: 1;
-
     @media (max-width: 1200px) {
         // font-size: 2.5rem;
     }
 `
-
 const FormInput = styled.input`
     padding: 4%;
     margin: 2% 0%;
@@ -83,13 +71,11 @@ const FormInput = styled.input`
     background: lightgray;
     color: black;
     font-size: 1.2rem;
- 
     &:focus {
         outline: none;
         box-shadow: 0 0 8px 2px #444;
     }
 `
-
 const ButtonGroup = styled.div`
     display: flex;
     justify-content: center;
@@ -97,7 +83,6 @@ const ButtonGroup = styled.div`
     height: 50%;
     margin-bottom: 2%;
 `
-
 const Button = styled.button`
     display: flex;
     justify-content: center;
@@ -113,46 +98,41 @@ const Button = styled.button`
     border-radius: 5px;
     height: 4rem;
     width: 7rem;
-
     @media (max-width: 1200px) {
         height: 3rem;
         width: 5rem;
         font-size: 0.8rem;
     }
 `
-
 const Login = () => {
     // Utility Hooks
     const history = useHistory();
     const dispatch = useDispatch();
-
     // Component State
     const [loginData, setLoginData] = useState({email: '', password: '', role: ''});
-
     // Login-Type Constants
     const rolePath = getRole(useParams()[0]);
     const oppositeRole = rolePath === 'admin' ? 'user' : 'admin'
     
+    useEffect( () => {
+        dispatch(logout)
+    }, []);
     // Handler Functions
     const toggleLoginType = () => toggleRoleType(rolePath, history);
-
     const handleChange = event => {
         setLoginData(
             {...loginData, [event.target.name]: event.target.value}
         );
     }
-
     const handleSubmit = event => {
         event.preventDefault();
-        
         dispatch(authIn({...loginData, role: rolePath}, history));
-
         setLoginData({
             email: '',
             password: ''
         });
     }
-
+    const checkForSubmit = event => event.key === 'Enter' ? handleSubmit(event) : null;
     // View
     return (
         <>
@@ -160,9 +140,9 @@ const Login = () => {
             <Form onSubmit={handleSubmit}>
                 <FormTitle>{rolePath[0].toUpperCase() + rolePath.slice(1)} Login</FormTitle>
                 <FormInput type="text" onChange={handleChange} value={loginData.email} name="email" placeholder="Email"></FormInput>
-                <FormInput type="password" onChange={handleChange} value={loginData.password} name="password" placeholder="Password"></FormInput>
+                <FormInput type="password" onKeyPress={checkForSubmit} onChange={handleChange} value={loginData.password} name="password" placeholder="Password"></FormInput>
                 <ButtonGroup>
-                    <Button onClick={handleSubmit} type="submit">Submit</Button>
+                    <Button onClick={handleSubmit} type="submit">Login</Button>
                     {/* Style this button to look like a toggle? */}
                     <Button onClick={toggleLoginType}>{oppositeRole[0].toUpperCase() + oppositeRole.slice(1)} Login</Button>
                 </ButtonGroup>
@@ -170,7 +150,5 @@ const Login = () => {
         </FormWrapper>
         </>
     );
-
 }
-
 export default Login;

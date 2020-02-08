@@ -9,7 +9,7 @@ import Modal from "react-animated-modal";
 import userTicketsTest from '../testData';
 import testTickets from '../testData';
 
-import { updateTicket } from '../actions/actions';
+import { updateTicket, axiosUpdateTicket} from "../actions/actions"
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -221,16 +221,13 @@ const SubmitButton = styled.button`
 const Ticket = (props) => {
   const ticketId = props.match.params.id;
   const dispatch = useDispatch();
-
   const state = useSelector( state => {
     return {
       tickets: state.user.userTickets,
       user: state.user
     }
   });
-
   const [allUsers, setUsers] = useState([]);
-
   const [ticketData, setTicketData] = useState({
     "ticket_id": 0,
     "title": "",
@@ -246,32 +243,16 @@ const Ticket = (props) => {
         user: state.user
     }
   });
-
   const [solution, setSolution] = useState('');
-
-  const ticketTest = {
-    "title": "Made up titlte",
-    "description": "Made up desc",
-    "attempted_solution":"No solution yet",
-    "created_at": "",
-    "assigned_to": "David L White",
-    "completed": true,
-    "user_id": 1
-  };
-
-  const debugTicketsGet = () => {
-    console.log("Test PUT debug:")
-    return axiosWithAuth().put('/api/tickets/1', ticketTest)
-    .then(res => console.log("Response from API / PUT:", res))
-    .catch(err => console.log("Error:", err))
-  }
-
-  useEffect(() => {
-    // Debug PUT no response error/ issue?
-    console.log(debugTicketsGet())
-  }, [])
-
-
+  // const ticketTest = {
+  //   "title": "Made up titlte",
+  //   "description": "Made up desc",
+  //   "attempted_solution":"No solution yet",
+  //   "created_at": "",
+  //   "assigned_to": "David L White",
+  //   "completed": true,
+  //   "user_id": 1
+  // };
   // Get users and populate allUsers state
   useEffect( () => {
    if(isAdmin) axiosWithAuth().get('/auth/user')
@@ -281,17 +262,11 @@ const Ticket = (props) => {
                     })
                    .catch(err => console.log('Error Fetching Users: ', err));
   }, [])
-
   // Get tickets and populate ticketData state
   useEffect(() => {
     const id = props.match.params.id;
-
-    console.log("I'm loading")
-    console.log(id, state);
-
     setTicketData( {...ticketData, ...state.tickets.find( ticket => String(ticket.ticket_id) === String(id) )} )
   }, []);
-  
     // David GET example (in case needed for MVP)
     // Get the target ticket from the API
     // I first must GET all tickets, then I verify 
@@ -303,34 +278,32 @@ const Ticket = (props) => {
       .then(ticket => console.log("David's Axios-Fetched Ticket:", ticket))
       .catch(err => console.log("Ticket API error:", err))
   }, [ticketData]);
-  
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
   // Doing this allows us to reuse ticket components
-  const solutions = ticketData?.attempted_solution.split('|') || '';
+  const solutions = ticketData?.attempted_solution?.split('|') || '';
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
   const isHelped = !ticketData?.assigned_to == undefined;
-  console.log(ticketData.assigned_to)
   const isMyUserTicket = (!isAdmin && ticketData?.user_id === userState.user.id);
-
+  const userToken = localStorage.getItem('token');
   // Variables for the text of the helper button
   const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticketData?.helper}`;
   const ticketHelperMsg = `Helper: ${ticketData?.assigned_to}`;
   const ticketHelperDetail = isHelped ? ticketHelperMsg : noTicketHelperMsg;
   const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
-
   const detailsHelpedBtn = document.querySelector('.details-helped');
   if (detailsHelpedBtn) {
     detailsHelpedBtn.addEventListener('mouseover', () => detailsHelpedBtn.textContent = 'Unassign');
     detailsHelpedBtn.addEventListener('mouseout', () => detailsHelpedBtn.textContent = ticketHelperMsg);
   }
-
   useEffect(() => {
     console.log(`Updating ticket #${ticketData.ticket_id}`, ticketData)
-    dispatch(updateTicket(ticketData, ticketData.ticket_id));
+    // dispatch(updateTicket(ticketData, ticketData.ticket_id));
+    console.log("Token", userToken)
+    console.log("ticketData", ticketData)
+    dispatch(axiosUpdateTicket(ticketData.ticket_id, ticketData, userToken));
   }, [ticketData.assigned_to, ticketData.attempted_solution, ticketData.completed, dispatch])
-
   // Click handler for the TicketHelper component
   const handleHelperClick = () => {
     if (isAdmin) {
@@ -343,10 +316,8 @@ const Ticket = (props) => {
       }
     }
   }
-
   // Variables for the text of the resolve ticket button
   const ticketResolvedDetail = isMyUserTicket ? 'Cancel Ticket' : 'Close Ticket';
-
   // Click handler for the TicketHelper component
   const handleResolvedClick = () => {
     const isResolved = ticketData?.completed === "true";
@@ -354,14 +325,11 @@ const Ticket = (props) => {
       setTicketData({...ticketData, completed: true});
     }
   }
-
   const handleSubmit = event => {
     event.preventDefault();
-
     // Form validation
     const noValue = solution.length === 0;
     const isValidated = !noValue;
-
     // Parse and resubmit pipe-delimited string + substring
     if (isValidated) {
       const updatedSolutions = [...solutions, solution].join('|');
@@ -369,11 +337,9 @@ const Ticket = (props) => {
       setSolution('');
     }
   }
-
   const handleChange = event => {
     setSolution(event.target.value);
   }
-
   return (
     <TicketWrapper>
       {/* Header Row */}
@@ -387,7 +353,6 @@ const Ticket = (props) => {
           <TicketHistoryTitle>Attempted Solutions:</TicketHistoryTitle>
         </TicketColumn>
       </TicketRow>
-
       {/* Main content row */}
       <TicketRow className="main">
         {/* Left side */}
@@ -400,7 +365,7 @@ const Ticket = (props) => {
         <TicketColumn className="right-side">
           <TicketSolutions>
             {
-              solutions?.map((sol, index) => (
+              (solutions ? solutions : [])?.map((sol, index) => (
                 <TicketSolutionRow key={index}>
                   <TicketSolution>{sol}</TicketSolution>
                 </TicketSolutionRow>
@@ -409,7 +374,6 @@ const Ticket = (props) => {
           </TicketSolutions>
         </TicketColumn>
       </TicketRow>
-
       {/* Footer row */}
       <TicketRow className="footer">
         {/* Left side */}
@@ -423,7 +387,6 @@ const Ticket = (props) => {
               (isAdmin || isMyUserTicket) ? 
                 <TicketDetail onClick={handleResolvedClick}>{ticketResolvedDetail}</TicketDetail> : null
             }
-
           </TicketDetails>
         </TicketColumn>
         {/* Right side */}
@@ -441,5 +404,4 @@ const Ticket = (props) => {
     </TicketWrapper>
   );
 } 
-
 export default Ticket;

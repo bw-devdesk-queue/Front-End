@@ -5,14 +5,15 @@ import AdminTabs from "./AdminTabs.js";
 
 const Dashboard = () => {
   return (
-    <div>
-      <Header />
+    
+      
       <div className="dash-container">
         <h1>Dashboard</h1>
+        <Header />
         <StudentTabs />
         <AdminTabs />
       </div>
-    </div>
+    
   );
 };
 

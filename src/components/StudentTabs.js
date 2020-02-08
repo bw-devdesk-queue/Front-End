@@ -2,25 +2,29 @@ import React from "react";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 
 const StudentTabs = () => {
+
+  // const path=()=>{
+  //   return 
+  // }
   return (
     <div className="tabs">
       <Tabs>
-        <TabList>
-          <Tab>Trouble Tickets</Tab>
-          <Tab>Create a Ticket</Tab>
-          <Tab>Student Portal</Tab>
-        </TabList>
+        
         <TabPanels>
           <TabPanel>
-            <p>List of Tickets!</p>
+            <h1>completed Tickets</h1>
           </TabPanel>
           <TabPanel>
-            <p>create a ticket form!</p>
+            <h1>Non Completed Tickets</h1>
           </TabPanel>
           <TabPanel>
-            <p>Students</p>
+            <h1>create a ticket form!</h1>
           </TabPanel>
-        </TabPanels>
+        </TabPanels><TabList>
+          <Tab>completed Tickets</Tab>
+          <Tab>Non Completed Tickets</Tab>
+          <Tab >Create a Ticket</Tab>
+        </TabList>
       </Tabs>
     </div>
   );

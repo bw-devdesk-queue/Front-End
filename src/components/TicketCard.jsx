@@ -102,31 +102,15 @@ const TicketHelper = styled.p`
 `
 
 // Ticket shape should be = id, title, submitter, status, helper, description
-const TicketCard = ({data}) => {
+const TicketCard = ({data, email}) => {
+ 
   // Ticket state
   const dispatch = useDispatch();
   //use of useDispatch to update ticket
   // dispatch(updateTicket(ticket.ticket_id, ticketData))
   const ticket = data ? data : [];
   const [ticketData, setTicketData] = useState(ticket);
-
-  // User data
-  const [allUsers, setUsers] = useState([]);
-  const userState = useSelector( state => {
-    return {
-        user: state.user
-    }
-  });
-  // Get users and populate allUsers state
-  useEffect( () => {
-    if(isAdmin) axiosWithAuth().get('/auth/user')
-                    .then( res => {
-                        console.log('Users Will Be: ', res.data);
-                        setUsers(res.data.users)
-                      })
-                    .catch(err => console.log('Error Fetching Users: ', err));
-    }, [])
-
+ 
   useEffect( () => {
     dispatch(updateTicket(ticketData, ticket.ticket_id));
   }, [ticketData.assigned_to])
@@ -148,7 +132,6 @@ const TicketCard = ({data}) => {
     }
   }
 
-  console.log(ticketData)  
   return (
     <TicketWrapper>
     <Link to={`/${rolePath}/tickets/${ticket.ticket_id}`}>
@@ -158,9 +141,9 @@ const TicketCard = ({data}) => {
     </Link>
       <TicketRow>
         <TicketDetails>
-          <TicketDetail>Id: {ticket.id}</TicketDetail>
-          <TicketDetail>Submitter: {ticket.submitter}</TicketDetail>
-          <TicketDetail>Status: {ticket.status}</TicketDetail>
+          <TicketDetail>Id: {ticket.ticket_id}</TicketDetail>
+          <TicketDetail>Submitter: {email}</TicketDetail>
+          <TicketDetail>Status: {ticket.completed===true? "solved":"needs to resolve"}</TicketDetail>
           <TicketHelper className={derivedClass} onClick={handleClick}>{ticketHelperDetail}</TicketHelper>
         </TicketDetails>
       </TicketRow>

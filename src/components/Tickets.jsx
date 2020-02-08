@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, {  useEffect } from 'react';
 import TicketCard from './TicketCard';
-import Ticket from './Ticket';
 import styled from 'styled-components';
-import testTickets from './../testData';
-
+import StudentTabs from "./StudentTabs";
+import AdminTabs from "./AdminTabs"
 import { useSelector, useDispatch } from 'react-redux';
-import { userTickets, recoverUser } from '../actions/actions';
+import { userTickets, recoverUser , getalltickets} from '../actions/actions';
 import { checkForUserRecovery, storeUser } from '../utils/utils';
 import { useHistory } from 'react-router-dom';
 
@@ -21,9 +20,11 @@ const TicketsWrapper = styled.div`
 const Tickets = ({data}) => {
   const dispatch = useDispatch();
   const history = useHistory();
+ 
   const state = useSelector( state => {
     return ({
       user: state.user,
+      email:state.user.email,
       tickets: state.user.userTickets
     });
   });
@@ -34,14 +35,15 @@ const Tickets = ({data}) => {
   }, [])
 
 
-  // const tickets = state.tickets;
-  console.log(state)
+
+ 
   return (
     <>
       <TicketsWrapper>
+        {history.location.pathname==="/user/tickets"?<StudentTabs/>:<AdminTabs/>}
         {
-          state.tickets.map(ticket => {
-          return <TicketCard data={ticket} key={ticket.id} />})
+          state.tickets.sort( (a, b) => Number(a['ticket_id']) - Number(b['ticket_id'])).map(ticket => {
+          return <TicketCard email={state.email} data={ticket} key={ticket.id} />})
         }
       </TicketsWrapper>
     </>
