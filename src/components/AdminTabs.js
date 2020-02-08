@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
+import { Tabs, TabList, Tab } from "@reach/tabs";
 
 const AdminTabs = () => {
   return (
@@ -8,19 +8,7 @@ const AdminTabs = () => {
         <TabList>
           <Tab>Unassigned Tickets</Tab>
           <Tab>My Open Tickets</Tab>
-          <Tab>Administrator</Tab>
         </TabList>
-        <TabPanels>
-          <TabPanel>
-            <p>Take Ownership of a Ticket</p>
-          </TabPanel>
-          <TabPanel>
-            <p>Follow up on these Tickets</p>
-          </TabPanel>
-          <TabPanel>
-            <p>Admins Only</p>
-          </TabPanel>
-        </TabPanels>
       </Tabs>
     </div>
   );

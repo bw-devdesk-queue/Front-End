@@ -101,16 +101,18 @@ const TicketHelper = styled.p`
 `
 
 // Ticket shape should be = id, title, submitter, status, helper, description
-const TicketCard = ({data}) => {
+const TicketCard = ({data, email}) => {
+ 
   // Ticket state
   const dispatch = useDispatch();
   //use of useDispatch to update ticket
   // dispatch(updateTicket(ticket.ticket_id, ticketData))
   const ticket = data ? data : [];
   const [ticketData, setTicketData] = useState(ticket);
-
+ 
   useEffect( () => {
-    dispatch(updateTicket(ticket.ticket_id, ticketData));
+    dispatch(updateTicket(ticketData, ticket.ticket_id));
+    
   }, [ticketData.helper])
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
@@ -129,7 +131,7 @@ const TicketCard = ({data}) => {
     }
   }
 
-  console.log(ticketData)  
+
   return (
     <TicketWrapper>
     <Link to={`/${rolePath}/tickets/${ticket.ticket_id}`}>
@@ -139,9 +141,9 @@ const TicketCard = ({data}) => {
     </Link>
       <TicketRow>
         <TicketDetails>
-          <TicketDetail>Id: {ticket.id}</TicketDetail>
-          <TicketDetail>Submitter: {ticket.submitter}</TicketDetail>
-          <TicketDetail>Status: {ticket.status}</TicketDetail>
+          <TicketDetail>Id: {ticket.ticket_id}</TicketDetail>
+          <TicketDetail>Submitter: {email}</TicketDetail>
+          <TicketDetail>Status: {ticket.completed===true? "solved":"needs to resolve"}</TicketDetail>
           <TicketHelper className={derivedClass} onClick={handleClick}>{ticketHelperDetail}</TicketHelper>
         </TicketDetails>
       </TicketRow>

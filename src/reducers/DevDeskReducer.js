@@ -1,4 +1,6 @@
-const intialState = {
+import { flushStorage } from "../utils/utils"
+
+const initialState = {
     allTickets: [],
     loading: false,
     user: {
@@ -7,11 +9,14 @@ const intialState = {
         name: '',
         userTickets: [],
         oneTicket:{}
+    },
+    admin:{
+        adminTickets:[]
     }
 }
 
 
-export const devDeskReducer = (state = intialState, action) => {
+export const devDeskReducer = (state = initialState, action) => {
 
     switch( action.type ){
         case 'LOADING': 
@@ -30,15 +35,14 @@ export const devDeskReducer = (state = intialState, action) => {
                     email: action.payload.email,
                     role: action.payload.role,
                     
-                }
-                
+                }    
             }  
   
         case 'USER_PAGE':
                 return { ...state, loading: false, 
                      user: {
                     name: action.payload.full_name,
-                    userTickets: action.payload.tickets|| []
+                    userTickets: action.payload.tickets
                 }
             }
 
@@ -82,6 +86,12 @@ export const devDeskReducer = (state = intialState, action) => {
                 return {
                     ...state, 
                     user: {...action.payload}
+                }
+        
+        case 'LOGOUT': 
+                flushStorage();
+                return {
+                    ...initialState
                 }
 
         default:

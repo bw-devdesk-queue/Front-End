@@ -8,12 +8,10 @@ export const PrivateRoute = ({component: Component, ...rest}) => {
 
     const hasToken = localStorage.getItem('token');
 
-    console.log('User: ', user);
-
     return (
         <Route 
             {...rest} render = {
-                props => ( user?.id || hasToken ) ? <Component {...props} /> : <Redirect to='/test' />
+                props => ( user?.id || hasToken ) ? <Component {...props} /> : <Redirect to='/login' />
             }
         />
     );
