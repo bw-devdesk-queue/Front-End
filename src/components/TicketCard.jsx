@@ -119,16 +119,23 @@ const TicketCard = ({data, email}) => {
   // Doing this allows us to reuse ticket components
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
-  const isHelped = ticket.assigned_to?.length > 0;
-  const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
-  const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticket.assigned_to}`;
-  const ticketHelperDetail = isHelped ? `Helper: ${ticket.assigned_to}` : noTicketHelperMsg;
+  const isAssigned = ticket.assigned_to?.length > 0;
+  const derivedClass = isAdmin ? (isAssigned ? 'details-helped' : 'details-nothelped') : 'details-user';
+  const noTicketAssignedToMsg = isAdmin ? 'Help Student' : `Helper: ${ticket.assigned_to}`;
+  const ticketAssignedToDetail = isAssigned ? `Helper: ${ticket.assigned_to}` : noTicketAssignedToMsg;
 
-  // Click handler for the TicketHelper component
+  // // Click handler for the TicketAssignedTo component
+  // const handleClick = () => {
+  //   if (isAdmin && !isAssigned) {
+  //     // Grab the user id from the state object and match it to the id of the correct user in allUsers
+  //     setTicketData({...ticketData, assigned_to: allUsers.filter(user => String(user.id) === String(userState.user.id))?.full_name});
+  //   }
+  // }
+
+  // Click handler for the TicketAssignedTo component
   const handleClick = () => {
-    if (isAdmin && !isHelped) {
-      // Grab the user id from the state object and match it to the id of the correct user in allUsers
-      setTicketData({...ticketData, assigned_to: allUsers.filter(user => String(user.id) === String(userState.user.id))?.full_name});
+    if (isAdmin && !isAssigned) {
+      setTicketData({...ticketData, assigned_to: loggedInUser.full_name});
     }
   }
 
@@ -144,7 +151,7 @@ const TicketCard = ({data, email}) => {
           <TicketDetail>Id: {ticket.ticket_id}</TicketDetail>
           <TicketDetail>Submitter: {email}</TicketDetail>
           <TicketDetail>Status: {ticket.completed===true? "solved":"needs to resolve"}</TicketDetail>
-          <TicketHelper className={derivedClass} onClick={handleClick}>{ticketHelperDetail}</TicketHelper>
+          <TicketAssignedTo className={derivedClass} onClick={handleClick}>{ticketAssignedToDetail}</TicketAssignedTo>
         </TicketDetails>
       </TicketRow>
     </TicketWrapper>
