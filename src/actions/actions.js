@@ -124,28 +124,6 @@ export const getalltickets=(id)=>dispatch=>{
     })
 }
 
-export const axiosUpdateTicket = (id, ticket, token) => dispatch => {
-    axios({
-      method: 'put',
-      url: `https:/devdeskbe.herokuapp.com/api/tickets/${id}`,
-      headers: {
-        authorization: token,
-      },
-      // data: JSON.stringify(ticket)
-      data: {
-        "title": "anna has update",
-        "submitted_by": "Josh",
-        "description": "hwa hahahah",
-        "attempted_solution": "Attempted 1|Attempted 2",
-        "completed": true
-      }
-    })
-    .then(res => {
-      console.log('Update ticket response', res)
-      dispatch({type:"UPDATE_TICKET", payload:res.data})
-    })
-    .catch(err => console.log('Update ticket error:', err))
-  }
 
   export const logout = () => dispatch => {
       flushStorage();
