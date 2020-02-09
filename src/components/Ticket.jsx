@@ -277,7 +277,7 @@ const Ticket = (props) => {
       .then(res => res.data.tickets.filter(ticket => parseInt(ticket.ticket_id) === parseInt(ticketId)))
       .then(ticket => console.log("David's Axios-Fetched Ticket:", ticket))
       .catch(err => console.log("Ticket API error:", err))
-  }, [ticketData]);
+  }, [ticketData.attempted_solution]);
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
   // Doing this allows us to reuse ticket components
