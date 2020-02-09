@@ -299,10 +299,12 @@ const Ticket = (props) => {
   }
   useEffect(() => {
     console.log(`Updating ticket #${ticketData.ticket_id}`, ticketData)
-    // dispatch(updateTicket(ticketData, ticketData.ticket_id));
-    console.log("Token", userToken)
-    console.log("ticketData", ticketData)
-    dispatch(axiosUpdateTicket(ticketData.ticket_id, ticketData, userToken));
+    if (parseInt(ticketData.ticket_id) > 0) {
+      const getRequiredSubset = ({title, submitted_by, description, attempted_solution, completed}) => 
+                                ({title, submitted_by, description, attempted_solution, completed})
+      const subset = getRequiredSubset(ticketData);
+      dispatch(updateTicket(subset, ticketData.ticket_id));
+    }
   }, [ticketData.assigned_to, ticketData.attempted_solution, ticketData.completed, dispatch])
   // Click handler for the TicketHelper component
   const handleHelperClick = () => {
