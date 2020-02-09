@@ -102,8 +102,9 @@ export const addticket=(ticket,id,history)=>dispatch=>{
 export const updateTicket=(ticket,id)=> dispatch =>{
     axiosWithAuth().put(`/api/tickets/${id}`, ticket)
     .then(res => {
-        console.log(res)
-        // dispatch({type:"UPDATE_TICKET", payload:res.data.ticket});
+        // res.data.ticket is an array of 1 ticket so we must grab it for reducer to insert
+        // into array of all tickets minus res.data.payload[0]
+        dispatch({type:"UPDATE_TICKET", payload:res.data.ticket[0]});
     })
     .catch(err=>{
         console.log(err)
