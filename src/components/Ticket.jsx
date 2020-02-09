@@ -254,6 +254,7 @@ const Ticket = (props) => {
   //   "user_id": 1
   // };
   // Get users and populate allUsers state
+  
   useEffect( () => {
    if(isAdmin) axiosWithAuth().get('/auth/user')
                    .then( res => {
@@ -277,14 +278,14 @@ const Ticket = (props) => {
       .then(res => res.data.tickets.filter(ticket => parseInt(ticket.ticket_id) === parseInt(ticketId)))
       .then(ticket => console.log("David's Axios-Fetched Ticket:", ticket))
       .catch(err => console.log("Ticket API error:", err))
-  }, [ticketData.attempted_solution]);
+  }, [ticketData.attempted_solution, ticketData.assigned_to, ticketData.completed]);
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
   // Doing this allows us to reuse ticket components
   const solutions = ticketData?.attempted_solution?.split('|') || '';
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
-  const isHelped = !ticketData?.assigned_to == undefined;
+  const isHelped = (!ticketData?.assigned_to == undefined && ticketData.assigned_to.length > 0);
   const isMyUserTicket = (!isAdmin && ticketData?.user_id === userState.user.id);
   const userToken = localStorage.getItem('token');
   // Variables for the text of the helper button
@@ -299,12 +300,10 @@ const Ticket = (props) => {
   }
   useEffect(() => {
     console.log(`Updating ticket #${ticketData.ticket_id}`, ticketData)
-    if (parseInt(ticketData.ticket_id) > 0) {
-      const getRequiredSubset = ({title, submitted_by, description, attempted_solution, completed}) => 
-                                ({title, submitted_by, description, attempted_solution, completed})
-      const subset = getRequiredSubset(ticketData);
-      dispatch(updateTicket(subset, ticketData.ticket_id));
-    }
+    const getRequiredSubset = ({title, submitted_by, description, attempted_solution, completed}) => 
+                              ({title, submitted_by, description, attempted_solution, completed})
+    const subset = getRequiredSubset(ticketData);
+    dispatch(updateTicket(subset, ticketData.ticket_id));
   }, [ticketData.assigned_to, ticketData.attempted_solution, ticketData.completed, dispatch])
   // Click handler for the TicketHelper component
   const handleHelperClick = () => {
@@ -312,9 +311,9 @@ const Ticket = (props) => {
       if (!isHelped) {
         // Grab the user id from the state object and match it to the id of the correct user in allUsers
         // setTicketData({...ticketData, assigned_to: "David L White"}) // backend test
-        setTicketData({...ticketData, assigned_to: allUsers.filter(user => String(user.id) === String(userState.user.id))?.full_name}) // backend PUT requests are not working
+        setTicketData({...ticketData, assigned_to: parseInt(state.user.id)}) // backend PUT requests are not working
       } else {
-        setTicketData({...ticketData, assigned_to: ''}) // Unassign self
+        setTicketData({...ticketData, assigned_to: null}) // Unassign self
       }
     }
   }

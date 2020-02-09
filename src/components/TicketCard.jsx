@@ -145,7 +145,7 @@ const TicketCard = ({data, email}) => {
   // Click handler for the TicketAssignedTo component
   const handleClick = () => {
     if (isAdmin && !isAssigned) {
-      setTicketData({...ticketData, assigned_to: loggedInUser.full_name});
+      setTicketData({...ticketData, assigned_to: 1});
     }
   }
 

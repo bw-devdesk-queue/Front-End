@@ -10,7 +10,7 @@ export const authIn = (userData, locationHistory) => dispatch => {
 
     axiosWithAuth().post(`/auth/${userData.role}/${authType}`, userData)
                    .then( res => {
-                    //    console.log('AUTH ATTEMPT DATA: ', res);
+                       console.log('AUTH ATTEMPT DATA: ', res);
 
                     // ANOTHER WORKAROUND FOR POOR BACKEND
                         if(res.data.admin){
@@ -70,11 +70,13 @@ export const getTickets = userID => dispatch => {
 
 
 export const recoverUser = user => dispatch => {
+    console.log("Recovering user from local...")
     dispatch({type: "RECOVER_USER_FROM_LOCAL", payload: user});
 }
 
 
 export const userTickets = (id) => dispatch => {
+    console.log("Dispatched user id:", id)
     axiosWithAuth().get(`/api/tickets/${id}`)
     .then(res=>{
         
@@ -104,7 +106,7 @@ export const updateTicket=(ticket,id)=> dispatch =>{
     .then(res => {
         // res.data.ticket is an array of 1 ticket so we must grab it for reducer to insert
         // into array of all tickets minus res.data.payload[0]
-        dispatch({type:"UPDATE_TICKET", payload:res.data.ticket[0]});
+        dispatch({type:"UPDATE_TICKET", payload:res.data.ticket[0]});  // commented out for debug
     })
     .catch(err=>{
         console.log(err)

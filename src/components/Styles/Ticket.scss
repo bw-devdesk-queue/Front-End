@@ -37,7 +37,7 @@ textarea {
   background-color: $nothelped-purple;
   color: $nothelped-pink;
 
-  &:last-child:hover {
+  &:hover {
     color: white;
     background-color: $helped-blue;
     transition: all 0.3s ease;
