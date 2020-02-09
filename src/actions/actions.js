@@ -124,8 +124,7 @@ export const getalltickets=(id)=>dispatch=>{
     })
 }
 
-
-  export const logout = () => dispatch => {
+export const logout = () => dispatch => {
       flushStorage();
       dispatch({type:'LOGOUT'});
   }
