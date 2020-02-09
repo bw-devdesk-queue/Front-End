@@ -34,6 +34,13 @@ const TicketRow = styled.div`
   width: 100%;
   display: flex;
   border-bottom: 1px solid darkgray;
+  border-radius: 0;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+  &:last-child {
+    border-bottom: 0;
+  }
 `
 
 const TicketTitle = styled.h3`
@@ -47,6 +54,8 @@ const TicketDetails = styled.div`
   display: flex;
   background-color: #f1eeee;
   width: 100%;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 
   @media (max-width: 1200px) {
     flex-direction: column;
@@ -82,7 +91,7 @@ const TicketDetail = styled.p`
 
 `
 
-const TicketHelper = styled.p`
+const TicketAssignedTo = styled.p`
   margin: 2%;
   border: 1px solid #333;
   white-space: nowrap;
@@ -96,8 +105,9 @@ const TicketHelper = styled.p`
     max-width: 100%;
     border-left: 1px solid black; 
     border-right: 1px solid black;
-    border-bottom: 1px solid black;
     border-radius: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
   }
 `
 
