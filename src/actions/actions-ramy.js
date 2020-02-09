@@ -10,7 +10,7 @@ export const authIn = (userData, locationHistory) => dispatch => {
 
     axiosWithAuth().post(`/auth/${userData.role}/${authType}`, userData)
                    .then( res => {
-                       console.log('AUTH ATTEMPT DATA: ', res);
+                    //    console.log('AUTH ATTEMPT DATA: ', res);
 
                     // ANOTHER WORKAROUND FOR POOR BACKEND
                         if(res.data.admin){
@@ -70,16 +70,14 @@ export const getTickets = userID => dispatch => {
 
 
 export const recoverUser = user => dispatch => {
-    console.log("Recovering user from local...")
     dispatch({type: "RECOVER_USER_FROM_LOCAL", payload: user});
 }
 
 
 export const userTickets = (id) => dispatch => {
-    console.log("Dispatched user id:", id)
     axiosWithAuth().get(`/api/tickets/${id}`)
     .then(res=>{
-        
+        console.log(res.data,"mrRamy")
         dispatch({type:"USER_PAGE", payload: res.data.data})
     })
     .catch(err=>{
@@ -101,12 +99,11 @@ export const addticket=(ticket,id,history)=>dispatch=>{
 }
 
 
-export const updateTicket=(ticket,id)=> dispatch =>{
+export const updateTicket=(id,ticket)=> dispatch =>{
     axiosWithAuth().put(`/api/tickets/${id}`, ticket)
     .then(res => {
-        // res.data.ticket is an array of 1 ticket so we must grab it for reducer to insert
-        // into array of all tickets minus res.data.payload[0]
-        dispatch({type:"UPDATE_TICKET", payload:res.data.ticket[0]});  // commented out for debug
+        console.log(res,"ramysamir")
+        dispatch({type:"UPDATE_TICKET", payload:res.data.ticket});
     })
     .catch(err=>{
         console.log(err)
@@ -124,21 +121,36 @@ export const getalltickets=(id)=>dispatch=>{
     axiosWithAuth().get(`/api/tickets/${id}`)
     .then(res=>{
         console.log(res,"data")
-        dispatch({type:"ADMIN_LOGIN", payload:res.data.tickets})
     })
 }
 
-export const logout = () => dispatch => {
+
+
+// export const axiosUpdateTicket = (id, ticket, token) => dispatch => {
+//     axios({
+//       method: 'put',
+//       url: `https:/devdeskbe.herokuapp.com/api/tickets/${18}`,
+//       headers: {
+//         authorization: token,
+//       },
+      
+//       data: {
+//         "title": "anna has updateee",
+//         "submitted_by": "Josh",
+//         "description": "hwa hahahah",
+//         "attempted_solution": "Attempted 1|Attempted 2",
+//         "completed": true
+//       }
+//     })
+//     .then(res => {
+//       console.log('Update ticket response', res)
+//       dispatch({type:"UPDATE_TICKET", payload:res.data})
+//     })
+//     .catch(err => console.log('Update ticket error:', err))
+//   }
+
+  export const logout = () => dispatch => {
+      console.log('Goodbye')
       flushStorage();
       dispatch({type:'LOGOUT'});
-  }
-
-
- export const adminTickets=()=>dispatch=>{
-      axiosWithAuth().get(`/api/tickets`)
-      .then(res=>{
-          console.log(res.data.tickets,"admintickets")
-          dispatch({type:"ADMIN_LOGIN", payload:res.data.tickets})
-          
-      })
   }

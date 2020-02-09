@@ -12,6 +12,14 @@ const initialState = {
     },
     admin:{
         adminTickets:[]
+    },
+
+    ticketData:{
+        "title": "",
+        "submitted_by": "",
+        "description": "",
+        "attempted_solution": "",
+        "completed": false
     }
 }
 
@@ -71,7 +79,17 @@ export const devDeskReducer = (state = initialState, action) => {
 
         
         case 'UPDATE_TICKET':
-                return {...state,  user: { ...state.user, tickets: [ state.user.userTickets.filter( ticket => ticket.ticket_id !== action.payload.ticket_id), action.payload ]}}
+
+        
+                return {...state,  
+                    ticketData:{
+                        "title": action.payload.title,
+                        "submitted_by": "github",
+                        "description": action.payload.description,
+                        "attempted_solution": action.payload.attempted_solution,
+                        "completed": action.payload.completed
+                    }
+                }
 
         case 'ADD_TICKET':
             return{
@@ -93,6 +111,15 @@ export const devDeskReducer = (state = initialState, action) => {
                 return {
                     ...initialState
                 }
+
+        case "ADMIN_LOGIN":
+            return{
+                ...state,
+                user: {
+                    
+                    userTickets: action.payload||[]
+                }
+            }
 
         default:
                 return {

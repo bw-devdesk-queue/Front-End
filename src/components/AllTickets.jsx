@@ -1,5 +1,5 @@
 import React from "react"
-import {updateTicket} from "../actions/actions"
+// import {updateTicket} from "../actions/actions"
 import {connect} from "react-redux"
 import {Link} from "react-router-dom"
 
@@ -21,4 +21,4 @@ const Ticket=(props)=>{
 }
 
 
-export default connect(state=>{return state},{updateTicket}) (Ticket);
+export default connect(state=>{return state},{}) (Ticket);

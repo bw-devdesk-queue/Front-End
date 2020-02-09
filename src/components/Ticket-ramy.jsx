@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import axios from "axios"
 import {TicketDescWrapper,TicketColumn, TicketRow , 
   TicketTitle, TicketWrapper, TicketDescription,
    TicketDetails,TicketDetail,TicketHelper,
    TicketHistoryTitle,TicketSolutions,TicketSolutionRow,
    TicketSolution,FormWrapperA,FormA,FormInputA,
    SubmitButton}from "./Styles/StyleWidgets"
+
 import { useRouteMatch } from 'react-router-dom'
-import styled from 'styled-components';
+
 import './Styles/Ticket.scss';
 import { axiosWithAuth } from '../utils/utils';
+import {connect} from "react-redux"
 
 // Test data
 import userTicketsTest from '../testData';
@@ -22,20 +25,8 @@ const loggedInUser = {full_name: "David L White"};
 
 
 
-/* Ticket shape
-
-"ticket": {
-    "ticket_id": 2,
-    "title": "Ticket tittle",
-    "description": "Ticket description",
-    "attempted_solution":"Ticket solution Attempted  by user",
-    "created_at": "2020-01-31T22:55:39.100Z",
-    "completed": false,
-    "user_id": 1
-}
-
-*/
 const Ticket = (props) => {
+
   const ticketId = props.match.params.id;
   const dispatch = useDispatch();
   const state = useSelector( state => {
@@ -45,7 +36,7 @@ const Ticket = (props) => {
     }
   });
   const [allUsers, setUsers] = useState([]);
-  
+
   const [ticketData, setTicketData] = useState({
     ticket_id: parseInt(ticketId),
     "title": "ghgfb",
@@ -57,33 +48,14 @@ const Ticket = (props) => {
     "completed": false,
     // "user_id": 0
   });
-  // const [ticketData, setTicketData] = useState({
-  //   "ticket_id": 0,
-  //   "title": "",
-  //   "description": "",
-  //   "attempted_solution":"",
-  //   "created_at": "",
-  //   "assigned_to": "Not Yet Assigned",
-  //   "completed": false,
-  //   "user_id": 0
-  // });
+ 
   const userState = useSelector( state => {
     return {
         user: state.user
     }
   });
   const [solution, setSolution] = useState('');
-  // const ticketTest = {
-  //   "title": "Made up titlte",
-  //   "description": "Made up desc",
-  //   "attempted_solution":"No solution yet",
-  //   "created_at": "",
-  //   "assigned_to": "David L White",
-  //   "completed": true,
-  //   "user_id": 1
-  // };
-  // Get users and populate allUsers state
-  
+
   useEffect( () => {
    if(isAdmin) axiosWithAuth().get('/auth/user')
                    .then( res => {
@@ -93,21 +65,22 @@ const Ticket = (props) => {
                    .catch(err => console.log('Error Fetching Users: ', err));
   }, [])
   // Get tickets and populate ticketData state
-  useEffect(() => {
-    const id = props.match.params.id;
-    setTicketData( {...ticketData, ...state.tickets.find( ticket => String(ticket.ticket_id) === String(id) )} )
-  }, []);
-    // David GET example (in case needed for MVP)
-    // Get the target ticket from the API
-    // I first must GET all tickets, then I verify 
-    // equality of match ticket_id and page id and 
-    // id from props.match.params.id
   // useEffect(() => {
-  //   axiosWithAuth().get('/api/tickets')
-  //     .then(res => res.data.tickets.filter(ticket => parseInt(ticket.ticket_id) === parseInt(ticketId)))
-  //     .then(ticket => console.log("David's Axios-Fetched Ticket:", ticket))
-  //     .catch(err => console.log("Ticket API error:", err))
-  // }, [ticketData.attempted_solution, ticketData.assigned_to, ticketData.completed]);
+  //   const id = props.match.params.id;
+  //   console.log(id,"idf")
+  //   setTicketData( {...ticketData, ...state.tickets.find( ticket => String(ticket.ticket_id) === String(id) )} )
+    
+  // }, []);
+  
+  useEffect(() => {
+    axiosWithAuth().get('/api/tickets')
+      .then(res => res.data.tickets.filter(ticket => parseInt(ticket.ticket_id) === parseInt(ticketId)))
+      .then(ticket => 
+        
+        console.log("David's Axios-Fetched Ticket:", ticket)
+        )
+      .catch(err => console.log("Ticket API error:", err))
+  }, [ticketData]);
   // Ticket details vars
   // The buttons render dynamically depending on the role of the logged in user
   // Doing this allows us to reuse ticket components
@@ -129,17 +102,25 @@ const Ticket = (props) => {
   }
   // useEffect(() => {
   //   console.log(`Updating ticket #${ticketData.ticket_id}`, ticketData)
-  //   const getRequiredSubset = ({title, submitted_by, description, attempted_solution, completed}) => 
-  //                             ({title, submitted_by, description, attempted_solution, completed})
-  //   const subset = getRequiredSubset(ticketData);
-  //   dispatch(updateTicket(subset, ticketData.ticket_id));
+  //   // dispatch(updateTicket(ticketData, ticketData.ticket_id));
+  //   console.log("Token", userToken)
+  //   console.log("ticketData", ticketData)
+    
   // }, [ticketData.assigned_to, ticketData.attempted_solution, ticketData.completed, dispatch])
+  useEffect(() => {
+    // console.log(`Updating ticket #${ticketData.ticket_id}`, ticketData)
+    // const getRequiredSubset = ({title, submitted_by, description, attempted_solution, completed}) => 
+    //                           ({title, submitted_by, description, attempted_solution, completed})
+    // const subset = getRequiredSubset(ticketData);
+     // dispatch(updateTicket(ticketData, ticketData.ticket_id));
+  }, [ticketData.assigned_to, ticketData.attempted_solution, ticketData.completed, dispatch])
   // Click handler for the TicketHelper component
   const handleHelperClick = () => {
     if (isAdmin) {
       if (!isHelped) {
         // Grab the user id from the state object and match it to the id of the correct user in allUsers
         // setTicketData({...ticketData, assigned_to: "David L White"}) // backend test
+        // setTicketData({...ticketData, assigned_to: allUsers.filter(user => String(user.id) === String(userState.user.id))?.full_name}) // backend PUT requests are not working
         setTicketData({...ticketData, assigned_to: parseInt(state.user.id)}) // backend PUT requests are not working
       } else {
         setTicketData({...ticketData, assigned_to: null}) // Unassign self
@@ -152,31 +133,83 @@ const Ticket = (props) => {
   const handleResolvedClick = () => {
     const isResolved = ticketData?.completed === "true";
     if (!isResolved) {
-      setTicketData({...ticketData, completed: true});
+      // setTicketData({...ticketData, completed: true});
     }
   }
   const handleSubmit = event => {
     event.preventDefault();
+    
     // Form validation
     const noValue = solution.length === 0;
     const isValidated = !noValue;
+    
     // Parse and resubmit pipe-delimited string + substring
     if (isValidated) {
       const updatedSolutions = [...solutions, solution].join('|');
-      setTicketData({...ticketData, 'attempted_solution': updatedSolutions});
+      // setTicketData({...ticketData, 'attempted_solution': updatedSolutions});
+      // setSolution('');
+    
+
+      
+
+      // setTicketData({...ticketData, 'attempted_solution': updatedSolutions});
+      // dispatch(updateTicket(props.match.params.id,{
+      //   "title": "ramy",
+      //   "submitted_by": "Ramy",
+      //   "description": "Ramy",
+      //   "attempted_solution": "Ramy",
+      //   "completed": true
+      // }))
+      // dispatch(updateTicket(ticketData.ticket_id, ticketData));
+
+      
+        // axios({
+        //   method: 'put',
+        //   url: `https:/devdeskbe.herokuapp.com/api/tickets/${ticketId}`,
+        //   headers: {
+        //     authorization: localStorage.getItem("token"),
+        //   },
+          
+        //   data: {
+        //     "title": ticketData.title,
+        //     "submitted_by": ticketData.submitted_by,
+        //     "description": ticketData.description,
+        //     "attempted_solution": ticketData.attempted_solution,
+        //     "completed": true
+        //   }
+        // })
+        // .then(res => {
+        //   console.log('Update ticket response', res.data.ticket[0])
+        //   localStorage.setItem(ticketId,JSON.stringify(res.data.ticket[0]))
+        //   dispatch({type:"UPDATE_TICKET", payload:res.data.ticket[0]})
+        // })
+        // .catch(err => console.log('Update ticket error:', err))
+
+        const newTicketData = {...ticketData, 'attempted_solution': updatedSolutions};
+        console.log(`Updating ticket #${newTicketData.ticket_id}`, newTicketData)
+        const getRequiredSubset = ({title, submitted_by, description, attempted_solution, completed}) => 
+                                  ({title, submitted_by, description, attempted_solution, completed})
+        const subset = getRequiredSubset(newTicketData);
+        console.log("Subset", solutions)
+        console.log("newTicketData", ticketData)
+        dispatch(updateTicket({
+          "title": "ghgfb",
+    "description": "hwa hahahah",
+    "submitted_by": "Joshfbf",
+    "attempted_solution":"",
+    // "created_at": "",
+    // "assigned_to": "Not Yet Assigned",
+    "completed": false,
+    // "user_id": 0
+        }, ticketData.ticket_id));
+      
+      
       setSolution('');
-
-      const getRequiredSubset = ({title, submitted_by, description, attempted_solution, completed}) => 
-                                ({title, submitted_by, description, attempted_solution, completed})
-      const subset = getRequiredSubset({...ticketData, 'attempted_solution': updatedSolutions});
-      dispatch(updateTicket(subset, ticketData.ticket_id));
-
     }
   }
   const handleChange = event => {
     setSolution(event.target.value);
   }
-
   return (
     <TicketWrapper>
       {/* Header Row */}
@@ -187,7 +220,7 @@ const Ticket = (props) => {
         </TicketColumn>
         {/* Right side */}
         <TicketColumn className="right-side">
-          <TicketHistoryTitle>Attempted Solutions:</TicketHistoryTitle>
+  <TicketHistoryTitle>Attempted Solutions:</TicketHistoryTitle>
         </TicketColumn>
       </TicketRow>
       {/* Main content row */}
@@ -241,4 +274,14 @@ const Ticket = (props) => {
     </TicketWrapper>
   );
 } 
-export default Ticket;
+
+const mapStateToProps=state=>{
+  return{
+title:state.ticketData.title,
+submitted_by:state.ticketData.submitted_by,
+description:state.ticketData.description,
+attempted_solution:state.ticketData.attempted_solution,
+completed:state.ticketData.completed
+  }
+}
+export default connect(mapStateToProps,{}) (Ticket);

@@ -21,9 +21,13 @@ const UserHome=(props)=>{
     }
     return(
         <>
-        <h1>hello {props.name}</h1>
+        
+            <h1>hello {props.name}</h1>
         <button onClick={sendPath}>Add Tickets</button>
+        
         <Ticket key={Ticket.ticket_id}  ticket={props.tickets} props={props}/>
+        
+        
         </>
     )
 }

@@ -3,9 +3,7 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 
 const StudentTabs = () => {
 
-  // const path=()=>{
-  //   return 
-  // }
+  
   return (
     <div className="tabs">
       <Tabs>

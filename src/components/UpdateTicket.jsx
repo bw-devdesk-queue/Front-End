@@ -1,24 +1,29 @@
 import React,{useState} from "react"
 import {connect} from "react-redux"
-import { updateTicket } from "../actions/actions"
+// import { updateTicket } from "../actions/actions"
 
  const UpdateForm =(props)=>{ 
      const id = props.match.params.id
      console.log(props)
 
      const [updatedTicket, setupdatedTicket]=useState({
-         title:"",
-         description:"",
-         completed:false,
+        "title": "anna has updateee",
+        "submitted_by": "Josh",
+        "description": "hwa hahahah",
+        
+        "completed": true,
+         "attempted_solution":""
+        
      })
 
      const handleChange=event=>{
-        setupdatedTicket({...updatedTicket,[event.target.name]:event.target.value})
+        // setupdatedTicket({...updatedTicket,[event.target.name]:event.target.value})
      }
 
      const handleSubmit=event=>{
          event.preventDefault()
-         props.updateTicket(updateTicket,id)
+        //  props.updateTicket(id,updateTicket)
+        //  console.log(updatedTicket,"ttt")
          setupdatedTicket({
             title:"",
             description:"",
@@ -33,12 +38,13 @@ import { updateTicket } from "../actions/actions"
 
         <legend>Here You Can Update Your Ticket</legend>
         <fieldset>
-            Update Title:<br/><textarea name="title" type="text" placeholder="Here You Can Update The Title OF The Ticket." value={updateTicket.title} onChange={handleChange}/>
+            {/* Update Title:<br/><textarea name="title" type="text" placeholder="Here You Can Update The Title OF The Ticket." value={updateTicket.title} onChange={handleChange}/>
             Update Description: <textarea name="description" type="text" placeholder="Here You Can Update The Description OF The Ticket." value={updateTicket.description} onChange={handleChange}/>
-            <button type="submit">..........Update ..........</button>
+            attempted_solution: <textarea name="attempted_solution" type="text" placeholder="Here You Can Update The Description OF The Ticket." value={updateTicket.attempted_solution} onChange={handleChange}/>
+            <button type="submit">..........Update ..........</button> */}
          </fieldset>   
         </form>
     )
  }
 
- export default connect(state=>{return state},{updateTicket}) (UpdateForm);
+ export default connect(state=>{return state},{}) (UpdateForm);

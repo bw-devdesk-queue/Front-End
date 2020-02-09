@@ -35,8 +35,8 @@ export default (props) => <>
         <PrivateRoute exact path="/home/user/:id" component={UserHome}/>
         <Route path="/home/user/:id/add-ticket" component={TicketForm}/>
         
-        <Route  path="/home/user/:id/ticket/:id" component={GetSpecificTicket}/>
-        <Route exact path="/home/user/:id/ticket/:id" component={UpdateForm}/>
+        {/* <Route  path="/home/user/:id/ticket/:id" component={GetSpecificTicket}/> */}
+        <Route path="/home/user/:id/ticket/:id" component={UpdateForm}/>
 
         {/* Tests */}
         <Route path="/test" component={TestComp}/>
