@@ -1,5 +1,6 @@
 import React, {  useEffect } from 'react';
 import TicketCard from './TicketCard';
+import TicketModal from './TicketModal';
 import styled from 'styled-components';
 import StudentTabs from "./StudentTabs";
 import AdminTabs from "./AdminTabs"

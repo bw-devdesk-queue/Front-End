@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import './Styles/Ticket.scss';
+import Modal from 'react-animated-modal';
 
+// Redux state
 import { useSelector, useDispatch } from 'react-redux';
 import { updateTicket } from '../actions/actions';
 import { axiosWithAuth } from './../utils/utils';
@@ -113,13 +115,15 @@ const TicketAssignedTo = styled.p`
 
 // Ticket shape should be = id, title, submitter, status, helper, description
 const TicketCard = ({data, email}) => {
- 
-  // Ticket state
+  // State hook for local data
+  const ticket = data ? data : [];
+  const [ticketData, setTicketData] = useState(ticket);
+  const [showModal, setShowModal] = useState(false);
+
+  // Redux state
   const dispatch = useDispatch();
   //use of useDispatch to update ticket
   // dispatch(updateTicket(ticket.ticket_id, ticketData))
-  const ticket = data ? data : [];
-  const [ticketData, setTicketData] = useState(ticket);
  
   useEffect( () => {
     dispatch(updateTicket(ticketData, ticket.ticket_id));
@@ -150,12 +154,12 @@ const TicketCard = ({data, email}) => {
   }
 
   return (
+    <>
     <TicketWrapper>
-    <Link to={`/${rolePath}/tickets/${ticket.ticket_id}`}>
+    {/* <Link to={`/${rolePath}/tickets/${ticket.ticket_id}`}></Link> */}
       <TicketRow>
         <TicketTitle>{ticket.title}</TicketTitle>
       </TicketRow>
-    </Link>
       <TicketRow>
         <TicketDetails>
           <TicketDetail>Id: {ticket.ticket_id}</TicketDetail>
@@ -165,6 +169,19 @@ const TicketCard = ({data, email}) => {
         </TicketDetails>
       </TicketRow>
     </TicketWrapper>
+    <div>
+      <Modal
+          visible={showModal}
+          closemodal={() => setShowModal(false)}
+          type="flipInX"
+      >
+        Here
+      </Modal>
+      <div onClick={() => setShowModal(true)}>
+          Open Modal
+      </div>
+    </div>
+    </>
   );
 }
 
