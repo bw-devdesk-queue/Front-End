@@ -134,7 +134,7 @@ const TicketCard = ({data, email}) => {
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
   const isAdmin = rolePath === 'admin';
   const isAssigned = ticket.assigned_to?.length > 0;
-  const derivedClass = isAdmin ? (isAssigned ? 'details-helped' : 'details-nothelped') : 'details-user';
+  const derivedClass = isAdmin ? (isAssigned ? 'details-helped' : 'details-card-nothelped') : 'details-user';
   const noTicketAssignedToMsg = isAdmin ? 'Help Student' : `Helper: ${ticket.assigned_to}`;
   const ticketAssignedToDetail = isAssigned ? `Helper: ${ticket.assigned_to}` : noTicketAssignedToMsg;
 
@@ -154,9 +154,8 @@ const TicketCard = ({data, email}) => {
   }
 
   return (
-    <>
     <TicketWrapper>
-    {/* <Link to={`/${rolePath}/tickets/${ticket.ticket_id}`}></Link> */}
+    <Link to={`/${rolePath}/tickets/${ticket.ticket_id}`}>
       <TicketRow>
         <TicketTitle>{ticket.title}</TicketTitle>
       </TicketRow>
@@ -167,21 +166,9 @@ const TicketCard = ({data, email}) => {
           <TicketDetail>Status: {ticket.completed===true? "solved":"needs to resolve"}</TicketDetail>
           <TicketAssignedTo className={derivedClass} onClick={handleClick}>{ticketAssignedToDetail}</TicketAssignedTo>
         </TicketDetails>
-      </TicketRow>
+      </TicketRow>  
+      </Link>
     </TicketWrapper>
-    <div>
-      <Modal
-          visible={showModal}
-          closemodal={() => setShowModal(false)}
-          type="flipInX"
-      >
-        Here
-      </Modal>
-      <div onClick={() => setShowModal(true)}>
-          Open Modal
-      </div>
-    </div>
-    </>
   );
 }
 

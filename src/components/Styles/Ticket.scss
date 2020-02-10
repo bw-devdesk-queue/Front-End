@@ -45,6 +45,12 @@ textarea {
   }
 }
 
+.details-card-nothelped {
+  transition: all 0.3s ease;
+  background-color: $nothelped-purple;
+  color: $nothelped-pink;
+}
+
 .details-helped {
   background-color: $helped-blue;
   color: white;
