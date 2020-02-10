@@ -67,14 +67,10 @@ export const devDeskReducer = (state = initialState, action) => {
 
 
         case 'UPDATE_TICKETS':
-                console.log("Before reducer updates, tickets currently are:", state.userTickets)
-                console.log("Reducer updating all tickets to:", action.payload.map(ticket => ticket.ticket_id))
                 return {...state, loading: false, user: { ...state.user, userTickets: action.payload.map(ticket => ticket.ticket_id)}};
 
         
         case 'UPDATE_TICKET':
-                console.log("New ticket:", action.payload)
-                console.log("New user:", { ...state.user, tickets: [ ...state.user.userTickets.filter( ticket => parseInt(ticket?.ticket_id) !== parseInt(action.payload?.ticket_id),), action.payload]})
                 return {...state,  user: { ...state.user, tickets: [ ...state.user.userTickets.filter( ticket => parseInt(ticket?.ticket_id) !== parseInt(action.payload?.ticket_id),), action.payload]}}
 
         case 'ADD_TICKET':

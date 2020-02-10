@@ -219,7 +219,8 @@ const SubmitButton = styled.button`
 */
 const Ticket = (props) => {
   // Variables
-  const ticketId = props.match.params.id;
+  const ticketId = props.match.params.id
+
   // Redux state
   const dispatch = useDispatch();
   const state = useSelector( state => {
@@ -233,6 +234,7 @@ const Ticket = (props) => {
         user: state.user
     }
   });
+
   // State hook
   const [allUsers, setUsers] = useState([]);
   const [ticketData, setTicketData] = useState({
@@ -249,7 +251,7 @@ const Ticket = (props) => {
 
   // At mount, get users and populate allUsers state
   useEffect( () => {
-   if(isAdmin) axiosWithAuth().get('/auth/user')
+   if(userIsAdmin) axiosWithAuth().get('/auth/user')
                    .then( res => {
                       console.log('Users Will Be: ', res.data);
                       setUsers(res.data.users)
@@ -262,8 +264,9 @@ const Ticket = (props) => {
     const id = props.match.params.id;
     setTicketData( {...ticketData, ...state.tickets.find( ticket => String(ticket.ticket_id) === String(id) )} )
   }, []);
-    // David GET example (in case needed for MVP)
-    // Get the target ticket from the API I first must GET all tickets
+
+  // David GET example (in case needed for MVP)
+  // Get the target ticket from the API I first must GET all tickets
   useEffect(() => {
     axiosWithAuth().get('/api/tickets')
       .then(res => res.data.tickets.filter(ticket => parseInt(ticket.ticket_id) === parseInt(ticketId)))
@@ -276,17 +279,16 @@ const Ticket = (props) => {
   // Doing this allows us to reuse ticket components
   const solutions = ticketData?.attempted_solution?.split('|') || '';
   const rolePath = useRouteMatch().path.match(/admin/) ? 'admin' : 'user';
-  const isAdmin = rolePath === 'admin';
-  const isHelped = (parseInt(ticketData.assigned_to) !== parseInt(0));
-  const isMyUserTicket = (!isAdmin && ticketData?.user_id === userState.user.id);
-  const userToken = localStorage.getItem('token');
+  const userIsAdmin = rolePath === 'admin';
+  const ticketIsHelped = (parseInt(ticketData.assigned_to) !== parseInt(0));
+  const ticketIsCompleted = ticketData?.completed;
+  const isMyUserTicket = (!userIsAdmin && ticketData?.user_id === userState.user.id);
 
   // Variables for the text of the helper button
-  const noTicketHelperMsg = isAdmin ? 'Help Student' : `Helper: ${ticketData?.completed}`;
+  const noTicketHelperMsg = userIsAdmin ? 'Help Student' : `Helper: ${ticketData?.completed}`;
   const ticketHelperMsg = `Helper: ${ticketData?.assigned_to}`;
-  const ticketHelperDetail = isHelped ? ticketHelperMsg : noTicketHelperMsg;
-  const derivedClass = isAdmin ? (isHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
-  let detailsHelpedBtn = document.querySelector('#helper-btn');
+  const ticketHelperDetail = ticketIsHelped ? ticketHelperMsg : noTicketHelperMsg;
+  const derivedClass = userIsAdmin ? (ticketIsHelped ? 'details-helped' : 'details-nothelped') : 'details-user';
 
   useEffect(() => {
     console.log(`Updating ticket #${ticketData.ticket_id}`, ticketData)
@@ -294,44 +296,16 @@ const Ticket = (props) => {
                               ({title, submitted_by, description, attempted_solution, completed})
     const subset = getRequiredSubset(ticketData);
     dispatch(updateTicket(subset, ticketData.ticket_id));
-    console.log("Ticket data", ticketData)
   }, [ticketData.attempted_solution, ticketData.completed, dispatch]) //assigned_to has been removed since backend doesn't work fully - DLW
-  
-  // Due to broken backend / state management, I have had to update state using local changes only to demo button effects
-  useEffect(() => {
-    // dispatch(updateTicketState(ticketData))
-    console.log("State", ticketData)
-  }, [ticketData.assigned_to, ticketData.completed]) 
 
-  // Click handler for the TicketHelper component
-  function addUnassign() {
-    console.log("isHelped:", isHelped)
 
-    if (!isHelped) {
-      // detailsHelpedBtn.textContent = 'Unassign';
-    }
-    else {
-      detailsHelpedBtn.textContent = noTicketHelperMsg;
-    }
-  }
-  function removeUnassign() {
-    // Do nothing
-  }
+  // Click handler for the assigned to button
   const handleHelperClick = () => {
-    const isHelped = (parseInt(ticketData.assigned_to) !== parseInt(0));
-    if (isAdmin) {
-      if (!isHelped) {
-        // Grab the user id from the state object and match it to the id of the correct user in allUsers
-        setTicketData({...ticketData, assigned_to: loggedInUser}) // backend placeholder due to issues with updating tickets
-        dispatch(updateTicketState(ticketData)) // backend issue workaround for demo purposes
-        detailsHelpedBtn.addEventListener('mouseover', addUnassign, true);
-        // detailsHelpedBtn.addEventListener('mouseout', removeUnassign, true);
-        // setTicketData({...ticketData, assigned_to: parseInt(state.user.id)}) // commented out because backend PUT requests are not working
-      } else {
-        setTicketData({...ticketData, assigned_to: 0}) // Unassign self
-        detailsHelpedBtn.removeEventListener('mouseover', addUnassign, true);
-        detailsHelpedBtn.removeEventListener('mouseout', removeUnassign, true);
+    if (userIsAdmin) {
+      if (!ticketIsHelped) {
+        setTicketData({...ticketData, assigned_to: loggedInUser}); // backend placeholder due to issues with updating tickets
       }
+      dispatch(updateTicketState(ticketData)) // backend issue workaround for demo purposes
     }
   }
   
@@ -344,14 +318,25 @@ const Ticket = (props) => {
     if (!isResolved) {
       setTicketData({...ticketData, completed: true});
     }
+    dispatch(updateTicketState(ticketData)) // backend issue workaround for demo purposes
   }
+
+  // Click handler for the Ticket reassign button
+  const handleReassignClick = () => {
+    if (ticketIsHelped) {
+      setTicketData({...ticketData, assigned_to: 0})
+    }
+    dispatch(updateTicketState(ticketData)) // backend issue workaround for demo purposes
+  }
+
+  // Form submission for the solutions textarea box
   const handleSubmit = event => {
     event.preventDefault();
     // Form validation
     const noValue = solution.length === 0;
-    const isValidated = !noValue;
+    const formIsValidated = !noValue;
     // Parse and resubmit pipe-delimited string + substring
-    if (isValidated) {
+    if (formIsValidated) {
       const updatedSolutions = [...solutions, solution].join('|');
       setTicketData({...ticketData, 'attempted_solution': updatedSolutions});
       setSolution('');
@@ -400,12 +385,16 @@ const Ticket = (props) => {
         <TicketColumn className="left-side">
           <TicketDetails>
             <TicketDetail>Id: {ticketData?.ticket_id}</TicketDetail>
-            <TicketDetail>Submitter: {isAdmin ? allUsers && allUsers?.find(user => user.id === ticketData?.user_id)?.full_name : state.user.name}</TicketDetail>
+            <TicketDetail>Submitter: {userIsAdmin ? allUsers && allUsers?.find(user => user.id === ticketData?.user_id)?.full_name : state.user.name}</TicketDetail>
             <TicketDetail>Status: {ticketData?.completed ? 'Resolved' : 'Active'}</TicketDetail>
-            <TicketHelper id='helper-btn' className={derivedClass} onClick={handleHelperClick}>{ticketHelperDetail}</TicketHelper>
+            <TicketHelper className={derivedClass} onClick={handleHelperClick}>{ticketHelperDetail}</TicketHelper>
             {
-              (isAdmin || isMyUserTicket) ? 
+              (userIsAdmin || isMyUserTicket) && (!ticketIsCompleted) ? 
                 <TicketDetail onClick={handleResolvedClick}>{ticketResolvedDetail}</TicketDetail> : null
+            }
+            {
+              (userIsAdmin && ticketIsHelped) ? 
+                <TicketDetail onClick={handleReassignClick}>Reassign</TicketDetail> : null
             }
           </TicketDetails>
         </TicketColumn>

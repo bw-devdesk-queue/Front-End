@@ -30,10 +30,8 @@ const Tickets = ({data}) => {
   });
 
   useEffect( () => {
-    console.log("User id?:", state.user.id)
     state.user.id ? storeUser(state.user) : dispatch(recoverUser(checkForUserRecovery(history)));
     dispatch(userTickets(state.user.id));
-    console.log("User id?:", state.user.id)
   }, [])
 
 
