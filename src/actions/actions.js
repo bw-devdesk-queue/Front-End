@@ -113,6 +113,10 @@ export const updateTicket=(ticket,id)=> dispatch =>{
     })
 }
 
+export const updateTicketState=(ticket)=> dispatch =>{
+    dispatch({type:"UPDATE_TICKET", payload:ticket});  // Update state without getting data from API due to backend issues - for demo only
+}
+
 export const getoneticket=(id)=>dispatch=>{
     axiosWithAuth().get(`/api/tickets/${id}`)
     .then(res=>{

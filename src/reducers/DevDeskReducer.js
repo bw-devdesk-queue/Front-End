@@ -73,7 +73,9 @@ export const devDeskReducer = (state = initialState, action) => {
 
         
         case 'UPDATE_TICKET':
-                return {...state,  user: { ...state.user, tickets: [ ...state.user.userTickets.filter( ticket => ticket?.ticket_id !== action.payload?.ticket_id), action.payload ]}}
+                console.log("New ticket:", action.payload)
+                console.log("New user:", { ...state.user, tickets: [ ...state.user.userTickets.filter( ticket => parseInt(ticket?.ticket_id) !== parseInt(action.payload?.ticket_id),), action.payload]})
+                return {...state,  user: { ...state.user, tickets: [ ...state.user.userTickets.filter( ticket => parseInt(ticket?.ticket_id) !== parseInt(action.payload?.ticket_id),), action.payload]}}
 
         case 'ADD_TICKET':
             return{

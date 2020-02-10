@@ -12,6 +12,7 @@ const UserHome=(props)=>{
 
     
     useEffect(()=>{
+        console.log("id:", id)
         id ? storeUser(props.user) : props.recoverUser(checkForUserRecovery(history));
         props.userTickets(id)
     },[userTickets])

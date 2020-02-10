@@ -1,8 +1,8 @@
 import React from "react";
 import {connect} from "react-redux";
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
-
+import { NavLink, useLocation } from 'react-router-dom';
+import { getRole } from './../utils/utils';
 import { logout } from '../actions/actions';
 
 const HeaderC = styled.nav`
@@ -26,19 +26,14 @@ const Title=styled.h1`
 
 
 const Header = (props) =>{
-
-  
+  const role = getRole(useLocation().pathname);
   return (
     <HeaderC className="nav-bar">
-      
         <Title>Welcome to DevDesk</Title>
-        <NavLink to="/user/tickets">Home</NavLink>
+        <NavLink to={`/${role}/tickets`}>Home</NavLink>
         <NavLink to="/login/user">Login</NavLink>
         <NavLink to="/Register/user">Register</NavLink>
         <NavLink to="/" onClick={logout}>Sign-out</NavLink>
-      
-      
-    
     </HeaderC>
   );
 };
