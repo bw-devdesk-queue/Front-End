@@ -59,7 +59,7 @@ export const authIn = (userData, locationHistory) => dispatch => {
 export const getTickets = userID => dispatch => {
     axiosWithAuth().get(`/api/tickets/${userID}`)
                    .then(res => {
-                     
+                     console.log("My tickets:", res.data.tickets[0])
                      const currentUser = JSON.parse( localStorage.getItem('user') );
                      localStorage.setItem('user', JSON.stringify({...currentUser, userTickets: res.data.tickets}));
                      dispatch({type: 'UPDATE_TICKETS', payload: res.data.tickets});

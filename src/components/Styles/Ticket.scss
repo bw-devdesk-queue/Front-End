@@ -1,14 +1,17 @@
 // Color vriables
 $resolved-green: #04D651;
-$unresolved-orange: orange;
+$unresolved-orange: #FFA500;
 $nothelped-purple: #FF12FF;
 $nothelped-pink: #F7EEFF;
 $helped-blue:  #0099FE;
 $details-darkgray: #333;
+$navtext-brown: #634000;
+$hbmenu-brown: #866629;
 
 // Styles
 body {
   font-family: 'Roboto', sans-serif;
+  background: whitesmoke;
 }
 
 p {

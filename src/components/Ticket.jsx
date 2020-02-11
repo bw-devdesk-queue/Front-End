@@ -18,6 +18,7 @@ const TicketWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: #fff;
+  margin-top: 1%;
   margin-bottom: 1%;
   margin-left: 1%;
   border-radius: 5px;
@@ -82,6 +83,7 @@ const TicketDetail = styled.p`
   justify-content: center;
   align-items: center;
   margin: 2%;
+  border-radius: 5px;
   border: 1px solid gold;
   overflow: hidden;
   white-space: wrap;
@@ -170,6 +172,7 @@ const FormWrapper = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #f1eeee;
+  border-radius: 5px;
   height: 100%;
   width: 100%;
 `
@@ -219,7 +222,9 @@ const SubmitButton = styled.button`
 */
 const Ticket = (props) => {
   // Variables
-  const ticketId = props.match.params.id
+  const ticketId = props.match.params.id;
+  const loggedInUser = JSON.parse(localStorage.getItem('user')).full_name || "Test User";
+  console.log("User here:", JSON.parse(localStorage.getItem('user')))
 
   // Redux state
   const dispatch = useDispatch();

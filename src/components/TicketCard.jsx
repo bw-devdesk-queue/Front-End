@@ -18,6 +18,7 @@ const TicketWrapper = styled.div`
   background: #fff;
   padding-top: 1%;
   margin-bottom: 1%;
+  margin-top: 1%;
   border-radius: 5px;
   border: 1.5px solid black;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
@@ -28,6 +29,10 @@ const TicketWrapper = styled.div`
     transition: all 0.4s ease;
     background-color: lightgray;
     border: 1.5px solid #333;
+  }
+
+  @media (max-width: 900px) {
+    width: 90%;
   }
 
 `
